@@ -5,7 +5,6 @@ from . import views
 app_name = "shift"
 
 urlpatterns = [
-    path("", views.index, name="index"), 
     path("login", views.login, name="login"), 
     path("home", views.home, name="home"), 
     path("specification/<int:task_id>", views.specification, name="specification"), 
