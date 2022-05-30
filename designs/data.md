@@ -13,7 +13,7 @@
 - startTime
 - endTime
 - restTime
-- class(CL業務, 外業務など)
+- type(CL業務, 外業務など)
 - capacity
 - extra(特別なこと)
 - workers(WorkとTaskは多対多)
