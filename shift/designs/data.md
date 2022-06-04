@@ -2,7 +2,7 @@
 - id
 - name(姓名, スペース無し)
 - email
-- password
+- password(hash化したものを格納)
 - tasks(WorkとTaskは多対多)
 
 # Task
@@ -17,3 +17,8 @@
 - capacity
 - extra(特別なこと)
 - workers(WorkとTaskは多対多)
+
+# Feedback
+- id
+- text
+- response(デフォルトは空白でユーザからの入力は無し)

@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Task, Worker
+from .models import Task, Worker, Feedback
 
 # Create your views here.
 def login(request):
