@@ -1,4 +1,12 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
+    <h1>
+        {{ message }}
+    </h1>
 
+    <form action="{% url 'shift:login' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit">
+    </form>
 {% endblock %}
