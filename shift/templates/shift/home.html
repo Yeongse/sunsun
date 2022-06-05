@@ -1,4 +1,48 @@
 {% extends 'shift/layout.html' %}
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+{% endblock %}
+
 {% block body %}
 
+{% comment %} 前後の月への遷移 {% endcomment %}
+<a href="{% url "shift:home" month_previous.year month_previous.month %}">前月</a>
+{{ month_current | date:"Y年m月" }}
+<a href="{% url "shift:home" month_next.year month_next.month %}">次月</a>
+
+<table class="table">
+    {% comment %} 曜日が一番上にヘッダーとして並ぶ {% endcomment %}
+    <thead>
+    <tr>
+        {% for w in week_names %}
+            <th>{{ w }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+
+    {% comment %} その月の日が週ごとに表形式で並んでいく.  {% endcomment %}
+    <tbody>
+    {% for week in month_days %}
+        <tr>
+            {% for day in week %}
+                {% if now == day %}
+                    <td class="table-success">
+                        {% else %}
+                    <td>
+                {% endif %}
+
+            {% if month_current.month != day.month %}
+                {{ day | date:"m/d" }}
+            {% else %}
+                {{ day.day }}
+            {% endif %}
+
+            </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
 {% endblock %}

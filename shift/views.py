@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -7,7 +8,11 @@ from django.contrib.auth.hashers import make_password, check_password
 from .models import Task, Worker, Feedback
 from .forms import LoginForm
 
+from django.views import generic
 
+
+import datetime
+now = datetime.datetime.now()
 
 # Create your views here.
 def login(request):
@@ -40,9 +45,25 @@ def login(request):
     })
 
 
-def home(request):
-    worker = Worker.objects.get(id=request.session["worker_id"])
-    return HttpResponse(worker.name)
+def home(request, year, month):
+    from . import mixins
+    calendar = mixins.MonthCalendarMixin()
+    calendar_data = calendar.get_month_calendar(year, month)
+    return render(request, "shift/home.html", calendar_data)
+
+# class MonthCalendar(mixins.MonthCalendarMixin, generic.TemplateView):
+#     """月間カレンダーを表示するビュー"""
+#     template_name = "shift/home.html"
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         calendar_context = self.get_month_calendar()
+#         context.update(calendar_context)
+#         return context
+    
+    # worker = Worker.objects.get(id=request.session["worker_id"])
+    return render(request, "shift/home.html", {})
+    # return HttpResponse(worker.name)
     
 
 
