@@ -14,6 +14,14 @@ from django.views import generic
 import datetime
 now = datetime.datetime.now()
 
+def login_checker(func):
+    def checker(request, **kwargs):
+        if "worker_id" not in request.session:
+            return HttpResponseRedirect(reverse("shift:login"))
+        else:
+            return func(request, **kwargs)
+    return checker
+
 # Create your views here.
 def login(request):
     err_message = ""
@@ -35,7 +43,7 @@ def login(request):
                 # check password
                 if is_auth:
                     request.session["worker_id"] = worker.id
-                    return HttpResponseRedirect(reverse("shift:home"))
+                    return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
                 else:
                     err_message = "パスワードが正しくありません"            
        
@@ -44,10 +52,10 @@ def login(request):
         "form": LoginForm()
     })
 
-
+@login_checker
 def home(request, year, month):
     from . import mixins
-    # worker = Worker.objects.get(id=request.session["worker_id"])
+    worker = Worker.objects.get(id=request.session["worker_id"])
     tasks = Task.objects.all()
     calendar = mixins.MonthCalendarMixin()
     calendar_data = calendar.get_month_calendar(year, month)
@@ -64,21 +72,22 @@ def home(request, year, month):
 
     return render(request, "shift/home.html", {
         "calendar_data": calendar_data, 
-        "month_days_tasks": month_days_tasks
+        "month_days_tasks": month_days_tasks, 
+        "worker": worker
     })
 
-
+@login_checker
 def specification(request):
     return 0
 
-
+@login_checker
 def make(request):
     return 0
 
-
+@login_checker
 def revise(request):
     return 0
 
-
+@login_checker
 def feedback(request):
     return 0

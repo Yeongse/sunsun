@@ -138,3 +138,6 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
 ]
+
+# when browser is closed, session resets
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
