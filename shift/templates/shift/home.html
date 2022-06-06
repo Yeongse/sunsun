@@ -7,39 +7,52 @@
 {% block body %}
 
 {% comment %} 前後の月への遷移 {% endcomment %}
-<a href="{% url "shift:home" month_previous.year month_previous.month %}">前月</a>
-{{ month_current | date:"Y年m月" }}
-<a href="{% url "shift:home" month_next.year month_next.month %}">次月</a>
+<a href="{% url "shift:home" calendar_data.month_previous.year calendar_data.month_previous.month %}">前月</a>
+{{ calendar_data.month_current | date:"Y年m月" }}
+<a href="{% url "shift:home" calendar_data.month_next.year calendar_data.month_next.month %}">次月</a>
 
 <table class="table">
     {% comment %} 曜日が一番上にヘッダーとして並ぶ {% endcomment %}
     <thead>
     <tr>
-        {% for w in week_names %}
+        {% for w in calendar_data.week_names %}
             <th>{{ w }}</th>
         {% endfor %}
     </tr>
     </thead>
 
-    {% comment %} その月の日が週ごとに表形式で並んでいく.  {% endcomment %}
+    {% comment %} カレンダーの中身 {% endcomment %}
     <tbody>
-    {% for week in month_days %}
+    {% for week_days_tasks in month_days_tasks%}
+
         <tr>
-            {% for day in week %}
-                {% if now == day %}
+            {% for day_days_tasks in week_days_tasks %}
+                {% if now == day_days_tasks.day %}
                     <td class="table-success">
-                        {% else %}
+                {% else %}
                     <td>
                 {% endif %}
-
-            {% if month_current.month != day.month %}
-                {{ day | date:"m/d" }}
-            {% else %}
-                {{ day.day }}
-            {% endif %}
-
-            </td>
-            {% endfor %}
+                
+                        {% comment %} その日の日付とそこに含まれる業務を箇条書きでカレンダーに1マスずつ格納していく {% endcomment %}
+                        <ul style="list-style: none;">
+                            <li>
+                            {% comment %} 前後の月が含まれる場合は何月かも書く {% endcomment %}
+                            {% if calendar_data.month_current.month != day_days_tasks.day.month %}
+                                {{ day_days_tasks.day | date:"m/d" }}
+                            {% else %}
+                                {{ day_days_tasks.day.day }}
+                            {% endif %}
+                            </li>
+                            
+                            
+                            {% for task in day_days_tasks.tasks %}
+                            <li> {{task.startTime}}〜{{ task.endTime }} {{ task.name }}</li>
+                            {% empty %}
+                            <li></li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                {% endfor %}
         </tr>
     {% endfor %}
     </tbody>

@@ -2,8 +2,6 @@ import calendar
 from collections import deque
 import datetime
 
-# 参考文献: https://blog.narito.ninja/detail/11/
-
 class BaseCalendarMixin:
     """カレンダー関連Mixinの、基底クラス"""
     first_weekday = 0  # 0は月曜から、1は火曜から。6なら日曜日からになります。お望みなら、継承したビューで指定してください。
@@ -24,7 +22,6 @@ class BaseCalendarMixin:
         week_names = deque(self.week_names)
         week_names.rotate(-self.first_weekday)  # リスト内の要素を右に1つずつ移動...なんてときは、dequeを使うと中々面白いです
         return week_names
-
 
 class MonthCalendarMixin(BaseCalendarMixin):
     """月間カレンダーの機能を提供するMixin"""
@@ -74,4 +71,9 @@ class MonthCalendarMixin(BaseCalendarMixin):
         }
         return calendar_data
 
-
+now = datetime.datetime.now()
+demo_calendar = MonthCalendarMixin()
+demo_calendar_data = demo_calendar.get_month_calendar(now.year, now.month)
+month_days = demo_calendar_data["month_days"]
+# print(demo_calendar_data)
+print(demo_calendar_data["month_days"][2][3])

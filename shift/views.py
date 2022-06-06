@@ -47,24 +47,25 @@ def login(request):
 
 def home(request, year, month):
     from . import mixins
+    # worker = Worker.objects.get(id=request.session["worker_id"])
+    tasks = Task.objects.all()
     calendar = mixins.MonthCalendarMixin()
     calendar_data = calendar.get_month_calendar(year, month)
-    return render(request, "shift/home.html", calendar_data)
 
-# class MonthCalendar(mixins.MonthCalendarMixin, generic.TemplateView):
-#     """月間カレンダーを表示するビュー"""
-#     template_name = "shift/home.html"
+    month_days_tasks = []
+    for week in calendar_data["month_days"]:
+        week_days_tasks = []
+        for day in week:
+            day_tasks = Task.objects.filter(date=day)
+            day_days_tasks = {"day": day, "tasks": day_tasks}
+            week_days_tasks.append(day_days_tasks)
+        month_days_tasks.append(week_days_tasks)
+    
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         calendar_context = self.get_month_calendar()
-#         context.update(calendar_context)
-#         return context
-    
-    # worker = Worker.objects.get(id=request.session["worker_id"])
-    return render(request, "shift/home.html", {})
-    # return HttpResponse(worker.name)
-    
+    return render(request, "shift/home.html", {
+        "calendar_data": calendar_data, 
+        "month_days_tasks": month_days_tasks
+    })
 
 
 def specification(request):
