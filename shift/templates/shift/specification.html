@@ -13,12 +13,18 @@
 
     <form action="{% url "shift:specification" task.id %}" method="post"> 
         {% csrf_token %}
-        {% if task in tasks_of_worker %}
-            <h2>あなたはこの業務に応募済です</h2>
-            <input type="submit" value="応募する" disabled>
+        {% comment %} 自分がまだ応募していないか→埋まってないか {% endcomment %}
+        {% if task not in tasks_of_worker %}
+            {% if member_num < task.capacity %}
+                <h2>あなたはこの業務に応募できます</h2>
+                <input type="submit" value="応募する">
+            {% else %}
+                <h2>この業務の募集は締め切りました</h2>
+                <input type="submit" value="応募する" disabled>
+            {% endif %}
         {% else %}
-            <h2>あなたはこの業務に応募できます</h2>
-            <input type="submit" value="応募する">
+            <h2>あなたはこの業務に応募済です</h2>
+            <input type="submit" value="応募する" disabled>    
         {% endif %}
     </form>
     <a href="{% url "shift:home" now.year now.month %}">ホームに戻る</a>

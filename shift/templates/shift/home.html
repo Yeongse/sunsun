@@ -44,11 +44,16 @@
                             {% endif %}
                             </li>
                             
-                            
-                            {% for task in day_days_tasks.tasks %}
+                            {% comment %} その業務と今のところ配属されている人数の辞書がtask_and_member {% endcomment %}
+                            {% for task_and_member in day_days_tasks.task_and_members %}
                             <li> 
-                                <a href="{% url "shift:specification" task.id %}">
-                                    {{task.startTime}}〜{{ task.endTime }} {{ task.name }}
+                                <a href="{% url "shift:specification" task_and_member.task.id %}">
+                                {% if task_and_member.member_num < task_and_member.task.capacity %}
+                                    &#9675;
+                                {% else %}
+                                    X
+                                {% endif %}
+                                    {{ task_and_member.task.startTime }}〜{{ task_and_member.task.endTime }} {{ task_and_member.task.name }}
                                 </a>
                             </li>
                             {% empty %}

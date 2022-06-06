@@ -64,12 +64,17 @@ def home(request, year, month):
         week_days_tasks = []
         for day in week:
             day_tasks = Task.objects.filter(date=day)
-            day_days_tasks = {"day": day, "tasks": day_tasks}
+
+            # 業務とそこで今のところ配属された人数をまとめて辞書で保存
+            # jinjaの中でtask.workers.all()っていうクエリを書けへんかったからこうしてる
+            task_and_members = []
+            for task in day_tasks:
+                task_and_members.append({"task": task, "member_num": len(task.workers.all())})
+
+            day_days_tasks = {"day": day, "task_and_members": task_and_members }
             week_days_tasks.append(day_days_tasks)
         month_days_tasks.append(week_days_tasks)
     
-
-    print(worker.tasks)
     return render(request, "shift/home.html", {
         "calendar_data": calendar_data, 
         "month_days_tasks": month_days_tasks, 
@@ -81,20 +86,22 @@ def specification(request, task_id):
     task = Task.objects.get(id=task_id)
     worker = Worker.objects.get(id=request.session["worker_id"])
     
-
     if request.method == "POST":
         # データ自体はちゃんと格納されている
         worker.tasks.add(task)
         return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
     return render(request, "shift/specification.html", {
         "task": task, 
+        "member_num": len(task.workers.all()), 
         "worker": worker, 
-        "tasks_of_worker": worker.tasks.all(), 
+        "tasks_of_worker": worker.tasks.all(),
         "now": now
     })
 
 @login_checker
 def confirm(request):
+    worker = Worker.objects.get(id=request.session["worker_id"])
+    tasks = worker.tasks.all()
     return HttpResponse("confirm")
 
 @login_checker
