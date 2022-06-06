@@ -94,13 +94,17 @@ def specification(request, task_id):
     })
 
 @login_checker
+def confirm(request):
+    return HttpResponse("confirm")
+
+@login_checker
 def make(request):
-    return 0
+    return HttpResponse("make")
 
 @login_checker
 def revise(request):
-    return 0
+    return HttpResponse("revise")
 
 @login_checker
 def feedback(request):
-    return 0
+    return HttpResponse("feedback")
