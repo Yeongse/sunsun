@@ -7,9 +7,9 @@
 {% block body %}
 
 {% comment %} 前後の月への遷移 {% endcomment %}
-<a href="{% url "shift:home" calendar_data.month_previous.year calendar_data.month_previous.month %}">前月</a>
+<a href="{% url "shift:home" calendar_data.month_previous.year calendar_data.month_previous.month %}">前の月</a>
 {{ calendar_data.month_current | date:"Y年m月" }}
-<a href="{% url "shift:home" calendar_data.month_next.year calendar_data.month_next.month %}">次月</a>
+<a href="{% url "shift:home" calendar_data.month_next.year calendar_data.month_next.month %}">次の月</a>
 
 <table class="table">
     {% comment %} 曜日が一番上にヘッダーとして並ぶ {% endcomment %}
@@ -27,7 +27,7 @@
 
         <tr>
             {% for day_days_tasks in week_days_tasks %}
-                {% if now == day_days_tasks.day %}
+                {% if calendar_data.now == day_days_tasks.day %}
                     <td class="table-success">
                 {% else %}
                     <td>
@@ -46,7 +46,11 @@
                             
                             
                             {% for task in day_days_tasks.tasks %}
-                            <li> {{task.startTime}}〜{{ task.endTime }} {{ task.name }}</li>
+                            <li> 
+                                <a href="{% url "shift:specification" task.id %}">
+                                    {{task.startTime}}〜{{ task.endTime }} {{ task.name }}
+                                </a>
+                            </li>
                             {% empty %}
                             <li></li>
                             {% endfor %}
