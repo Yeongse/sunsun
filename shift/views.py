@@ -6,7 +6,7 @@ from tabnanny import check
 from django.contrib.auth.hashers import make_password, check_password
 
 from .models import Task, Worker, Feedback
-from .forms import LoginForm, FeedbackForm
+from .forms import LoginForm, FeedbackForm, PersonalForm
 
 from django.views import generic
 
@@ -108,12 +108,47 @@ def confirm(request):
     })
 
 @login_checker
+def personal(request):
+    worker = Worker.objects.get(id=request.session["worker_id"])
+    err_message = ""
+    
+    if request.method == "POST":
+        form = PersonalForm(request.POST)
+
+        if form.is_valid():
+            input_name = form.cleaned_data["name"]
+            input_password1 = form.cleaned_data["password1"]
+            input_password2 = form.cleaned_data["password2"]
+            input_email = form.cleaned_data["email"]
+
+            if input_password1 == input_password2:
+                worker.name = input_name
+                worker.password = make_password(input_password1)
+                worker.email = input_email
+                worker.save()
+                return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+
+            else:
+                err_message = "パスワードが一致していません"
+    
+    return render(request, "shift/personal.html", {
+        "worker": worker, 
+        "form": PersonalForm(initial={"name": worker.name, "password1": "", "password2": "", "email": worker.email}), 
+        "now": now, 
+        "err_message": err_message
+    })
+
+@login_checker
 def make(request):
     return HttpResponse("make")
 
 @login_checker
 def revise(request):
     return HttpResponse("revise")
+
+@login_checker
+def register(request):
+    return 0
 
 @login_checker
 def feedback(request):
