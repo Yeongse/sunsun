@@ -28,3 +28,4 @@ class Worker(models.Model):
 class Feedback(models.Model):
     text = models.TextField()
     response = models.TextField(blank=True, null=True)
+    date = models.DateField()

@@ -1,4 +1,21 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
+    <h1>開発者へのフィードバック</h1>
+    <h2>送信フォーム</h2>
+    <form action="{% url 'shift:feedback' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit">
+    </form>
 
+    <h2>過去のフィードバック</h2>
+    {% for feedback in feedbacks %}
+        <h3>送信日時: {{ feedback.date }}</h3>
+        <h3>内容</h3>
+        <p>{{ feedback.text }}</p>
+
+        <h3>開発者からの返答</h3>
+        <p>{{ feedback.response }}</p>
+    {% endfor %}
+    <a href="{% url "shift:home" now.year now.month %}">ホームに戻る</a>
 {% endblock %}

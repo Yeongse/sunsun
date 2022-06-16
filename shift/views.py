@@ -6,7 +6,7 @@ from tabnanny import check
 from django.contrib.auth.hashers import make_password, check_password
 
 from .models import Task, Worker, Feedback
-from .forms import LoginForm
+from .forms import LoginForm, FeedbackForm
 
 from django.views import generic
 
@@ -102,7 +102,10 @@ def specification(request, task_id):
 def confirm(request):
     worker = Worker.objects.get(id=request.session["worker_id"])
     tasks = worker.tasks.all()
-    return HttpResponse("confirm")
+    return render(request, "shift/confirm.html", {
+        "tasks": tasks, 
+        "now": now
+    })
 
 @login_checker
 def make(request):
@@ -114,4 +117,18 @@ def revise(request):
 
 @login_checker
 def feedback(request):
-    return HttpResponse("feedback")
+    if request.method == "POST":
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            input_text = form.cleaned_data["text"]
+            print(input_text)
+            feedback = Feedback(text=input_text, response="", date=now)
+            feedback.save()
+            return HttpResponseRedirect(reverse("shift:feedback"))
+    
+    feedbacks = Feedback.objects.all()
+    return render(request, "shift/feedback.html", {
+        "form": FeedbackForm(), 
+        "feedbacks": feedbacks, 
+        "now": now
+    })

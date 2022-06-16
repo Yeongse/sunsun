@@ -1,0 +1,9 @@
+{% extends 'shift/layout.html' %}
+{% block body %}
+    <h1>あなたが申し込んだ業務の一覧</h1>
+     {% for task in tasks %}
+        <a href="{% url "shift:specification" task.id %}">{{ task.date }}: {{ task.name }}</a>
+     {% endfor %}
+
+    <a href="{% url "shift:home" now.year now.month %}">ホームに戻る</a>
+{% endblock %}
