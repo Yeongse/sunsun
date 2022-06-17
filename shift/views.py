@@ -6,9 +6,7 @@ from tabnanny import check
 from django.contrib.auth.hashers import make_password, check_password
 
 from .models import Task, Worker, Feedback
-from .forms import LoginForm, FeedbackForm, PersonalForm
-
-from django.views import generic
+from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, ReviseForm, MakeForm
 
 
 import datetime
@@ -148,7 +146,27 @@ def revise(request):
 
 @login_checker
 def register(request):
-    return 0
+    err_message = ""
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            input_name = form.cleaned_data["name"]
+            input_email = form.cleaned_data["email"]
+            input_is_admin = form.cleaned_data["is_admin"]
+
+            if len(Worker.objects.filter(email=input_email)) > 0:
+                err_message = "そのユーザは既に登録されています"
+            else:
+                worker = Worker(name=input_name, email=input_email, password=make_password("0000"), is_admin=input_is_admin)
+                worker.save()
+                return HttpResponseRedirect(reverse("shift:register"))
+            
+    return render(request, "shift/register.html", {
+        "form": RegisterForm(), 
+        "now": now, 
+        "err_message": err_message
+    })
 
 @login_checker
 def feedback(request):

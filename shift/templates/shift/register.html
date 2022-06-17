@@ -1,0 +1,12 @@
+{% extends 'shift/layout.html' %}
+{% block body %}
+    <h1>{{ err_message }}</h1>
+
+    <form action="{% url 'shift:register' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit">
+    </form>
+    
+    <a href="{% url "shift:home" now.year now.month %}">ホームに戻る</a>
+{% endblock %}

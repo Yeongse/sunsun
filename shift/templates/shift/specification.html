@@ -11,21 +11,26 @@
     <p>特筆事項: {{ task.extra }}</p>
     <p></p>
 
-    <form action="{% url "shift:specification" task.id %}" method="post"> 
-        {% csrf_token %}
-        {% comment %} 自分がまだ応募していないか→埋まってないか {% endcomment %}
-        {% if task not in tasks_of_worker %}
-            {% if member_num < task.capacity %}
-                <h2>あなたはこの業務に応募できます</h2>
-                <input type="submit" value="応募する">
+    {% if worker.is_admin %}
+        <a href="{% url "shift:revise" task.id %}">この業務を修正する</a>
+    {% else %}
+        <form action="{% url "shift:specification" task.id %}" method="post"> 
+            {% csrf_token %}
+            {% comment %} 自分がまだ応募していないか→埋まってないか {% endcomment %}
+            {% if task not in tasks_of_worker %}
+                {% if member_num < task.capacity %}
+                    <h2>あなたはこの業務に応募できます</h2>
+                    <input type="submit" value="応募する">
+                {% else %}
+                    <h2>この業務の募集は締め切りました</h2>
+                    <input type="submit" value="応募する" disabled>
+                {% endif %}
             {% else %}
-                <h2>この業務の募集は締め切りました</h2>
-                <input type="submit" value="応募する" disabled>
+                <h2>あなたはこの業務に応募済です</h2>
+                <input type="submit" value="応募する" disabled>    
             {% endif %}
-        {% else %}
-            <h2>あなたはこの業務に応募済です</h2>
-            <input type="submit" value="応募する" disabled>    
-        {% endif %}
-    </form>
+        </form>
+    {% endif %}
+    
     <a href="{% url "shift:home" now.year now.month %}">ホームに戻る</a>
 {% endblock %}

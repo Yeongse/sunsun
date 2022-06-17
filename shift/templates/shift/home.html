@@ -5,70 +5,77 @@
 {% endblock %}
 
 {% block body %}
+    <h1>お疲れ様です, {{ worker.name }}</h1>
 
-{% comment %} 前後の月への遷移 {% endcomment %}
-<a href="{% url "shift:home" calendar_data.month_previous.year calendar_data.month_previous.month %}">前の月</a>
-{{ calendar_data.month_current | date:"Y年m月" }}
-<a href="{% url "shift:home" calendar_data.month_next.year calendar_data.month_next.month %}">次の月</a>
+    {% comment %} 前後の月への遷移 {% endcomment %}
+    <a href="{% url "shift:home" calendar_data.month_previous.year calendar_data.month_previous.month %}">前の月</a>
+    {{ calendar_data.month_current | date:"Y年m月" }}
+    <a href="{% url "shift:home" calendar_data.month_next.year calendar_data.month_next.month %}">次の月</a>
 
-<table class="table">
-    {% comment %} 曜日が一番上にヘッダーとして並ぶ {% endcomment %}
-    <thead>
-    <tr>
-        {% for w in calendar_data.week_names %}
-            <th>{{ w }}</th>
-        {% endfor %}
-    </tr>
-    </thead>
-
-    {% comment %} カレンダーの中身 {% endcomment %}
-    <tbody>
-    {% for week_days_tasks in month_days_tasks%}
-
+    <table class="table">
+        {% comment %} 曜日が一番上にヘッダーとして並ぶ {% endcomment %}
+        <thead>
         <tr>
-            {% for day_days_tasks in week_days_tasks %}
-                {% if calendar_data.now == day_days_tasks.day %}
-                    <td class="table-success">
-                {% else %}
-                    <td>
-                {% endif %}
-                
-                        {% comment %} その日の日付とそこに含まれる業務を箇条書きでカレンダーに1マスずつ格納していく {% endcomment %}
-                        <ul style="list-style: none;">
-                            <li>
-                            {% comment %} 前後の月が含まれる場合は何月かも書く {% endcomment %}
-                            {% if calendar_data.month_current.month != day_days_tasks.day.month %}
-                                {{ day_days_tasks.day | date:"m/d" }}
-                            {% else %}
-                                {{ day_days_tasks.day.day }}
-                            {% endif %}
-                            </li>
-                            
-                            {% comment %} その業務と今のところ配属されている人数の辞書がtask_and_member {% endcomment %}
-                            {% for task_and_member in day_days_tasks.task_and_members %}
-                            <li> 
-                                <a href="{% url "shift:specification" task_and_member.task.id %}">
-                                {% if task_and_member.member_num < task_and_member.task.capacity %}
-                                    &#9675;
-                                {% else %}
-                                    X
-                                {% endif %}
-                                    {{ task_and_member.task.startTime }}〜{{ task_and_member.task.endTime }} {{ task_and_member.task.name }}
-                                </a>
-                            </li>
-                            {% empty %}
-                            <li></li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                {% endfor %}
+            {% for w in calendar_data.week_names %}
+                <th>{{ w }}</th>
+            {% endfor %}
         </tr>
-    {% endfor %}
-    </tbody>
+        </thead>
 
-</table>
-<h1>{{ worker.name }}</h2>
-<a href="{% url "shift:confirm" %}">勤務確認</a>
-<a href="{% url "shift:personal" %}">登録情報の変更</a>
-<a href="{% url "shift:feedback" %}">開発者へのフィードバック</a>
+        {% comment %} カレンダーの中身 {% endcomment %}
+        <tbody>
+        {% for week_days_tasks in month_days_tasks%}
+
+            <tr>
+                {% for day_days_tasks in week_days_tasks %}
+                    {% if calendar_data.now == day_days_tasks.day %}
+                        <td class="table-success">
+                    {% else %}
+                        <td>
+                    {% endif %}
+                    
+                            {% comment %} その日の日付とそこに含まれる業務を箇条書きでカレンダーに1マスずつ格納していく {% endcomment %}
+                            <ul style="list-style: none;">
+                                <li>
+                                {% comment %} 前後の月が含まれる場合は何月かも書く {% endcomment %}
+                                {% if calendar_data.month_current.month != day_days_tasks.day.month %}
+                                    {{ day_days_tasks.day | date:"m/d" }}
+                                {% else %}
+                                    {{ day_days_tasks.day.day }}
+                                {% endif %}
+                                </li>
+                                
+                                {% comment %} その業務と今のところ配属されている人数の辞書がtask_and_member {% endcomment %}
+                                {% for task_and_member in day_days_tasks.task_and_members %}
+                                <li> 
+                                    <a href="{% url "shift:specification" task_and_member.task.id %}">
+                                    {% if task_and_member.member_num < task_and_member.task.capacity %}
+                                        &#9675;
+                                    {% else %}
+                                        X
+                                    {% endif %}
+                                        {{ task_and_member.task.startTime }}〜{{ task_and_member.task.endTime }} {{ task_and_member.task.name }}
+                                    </a>
+                                </li>
+                                {% empty %}
+                                <li></li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+    {% if worker.is_admin %}
+        <a href="{% url "shift:make" %}">新しい業務を作成する</a>
+        <a href="{% url "shift:register" %}">新しい従業員を登録する</a>
+    {% else %}
+        <a href="{% url "shift:confirm" %}">勤務確認</a>
+        <a href="{% url "shift:personal" %}">登録情報の変更</a>
+    {% endif %}
+    
+    <a href="{% url "shift:feedback" %}">開発者へのフィードバック</a>
 {% endblock %}
