@@ -12,6 +12,13 @@
     <p></p>
 
     {% if worker.is_admin %}
+        <ul>
+            {% for worker in workers_of_task %}
+                <li>{{ worker.name }}</li>
+            {% empty %}
+                <li>この業務の応募者はまだいません</li>
+            {% endfor %}
+        <ul>
         <a href="{% url "shift:revise" task.id %}">この業務を修正する</a>
     {% else %}
         <form action="{% url "shift:specification" task.id %}" method="post"> 

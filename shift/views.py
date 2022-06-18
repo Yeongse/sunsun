@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from tabnanny import check
 from django.contrib.auth.hashers import make_password, check_password
+from pyrsistent import v
 
 from .models import Task, Worker, Feedback
 from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, ReviseForm, MakeForm
@@ -92,6 +93,7 @@ def specification(request, task_id):
         "task": task, 
         "member_num": len(task.workers.all()), 
         "worker": worker, 
+        "workers_of_task": task.workers.all(), 
         "tasks_of_worker": worker.tasks.all(),
         "now": now
     })
@@ -129,9 +131,15 @@ def personal(request):
             else:
                 err_message = "パスワードが一致していません"
     
+    initial_value = {
+        "name": worker.name, 
+        "password1": "", 
+        "password2": "", 
+        "email": worker.email
+    }
     return render(request, "shift/personal.html", {
         "worker": worker, 
-        "form": PersonalForm(initial={"name": worker.name, "password1": "", "password2": "", "email": worker.email}), 
+        "form": PersonalForm(initial=initial_value), 
         "now": now, 
         "err_message": err_message
     })
@@ -141,8 +149,62 @@ def make(request):
     return HttpResponse("make")
 
 @login_checker
-def revise(request):
-    return HttpResponse("revise")
+def revise(request, task_id):
+    message = ""
+    task = Task.objects.get(id=task_id)
+
+    if request.method == "POST":
+        form = ReviseForm(request.POST)
+
+        if form.is_valid():
+            input_name = form.cleaned_data["name"]
+            input_date = form.cleaned_data["date"]
+            input_startTime = form.cleaned_data["startTime"]
+            input_endTime = form.cleaned_data["endTime"]
+            input_specification = form.cleaned_data["specification"]
+            input_type = form.cleaned_data["type"]
+            input_capacity = form.cleaned_data["capacity"]
+            input_extra = form.cleaned_data["extra"]
+            input_add = Worker.objects.filter(name=form.cleaned_data["add"])
+            input_remove = Worker.objects.filter(name=form.cleaned_data["remove"])
+
+            task.name = input_name
+            task.date = input_date
+            task.startTime = input_startTime
+            task.endTime = input_endTime
+            task.specification = input_specification
+            task.type = input_type
+            task.capacity = input_capacity
+            task.extra = input_extra
+            task.save()
+
+            if len(input_add) != 0:
+                if len(task.workers.all()) == task.capacity:
+                    message = "追加することができませんでした"
+                else:
+                    input_add[0].tasks.add(task)
+            if len(input_remove) != 0:
+                input_remove[0].tasks.remove(task)
+
+            return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+
+
+    initial_value = {
+        "name": task.name, 
+        "date": task.date, 
+        "startTime": task.startTime, 
+        "endTime": task.endTime, 
+        "specification": task.specification, 
+        "type": task.type, 
+        "capacity": task.capacity, 
+        "extra": task.extra
+    }
+    return render(request, "shift/revise.html", {
+        "message": message, 
+        "task": task, 
+        "form": ReviseForm(initial_value), 
+        "now": now
+    })
 
 @login_checker
 def register(request):
@@ -172,9 +234,9 @@ def register(request):
 def feedback(request):
     if request.method == "POST":
         form = FeedbackForm(request.POST)
+
         if form.is_valid():
             input_text = form.cleaned_data["text"]
-            print(input_text)
             feedback = Feedback(text=input_text, response="", date=now)
             feedback.save()
             return HttpResponseRedirect(reverse("shift:feedback"))
