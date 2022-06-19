@@ -2,12 +2,10 @@ from datetime import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from tabnanny import check
 from django.contrib.auth.hashers import make_password, check_password
-from pyrsistent import v
 
 from .models import Task, Worker, Feedback
-from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, ReviseForm, MakeForm
+from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, ReviseForm, ReassignForm, MakeForm
 
 
 import datetime
@@ -165,8 +163,6 @@ def revise(request, task_id):
             input_type = form.cleaned_data["type"]
             input_capacity = form.cleaned_data["capacity"]
             input_extra = form.cleaned_data["extra"]
-            input_add = Worker.objects.filter(name=form.cleaned_data["add"])
-            input_remove = Worker.objects.filter(name=form.cleaned_data["remove"])
 
             task.name = input_name
             task.date = input_date
@@ -177,14 +173,6 @@ def revise(request, task_id):
             task.capacity = input_capacity
             task.extra = input_extra
             task.save()
-
-            if len(input_add) != 0:
-                if len(task.workers.all()) == task.capacity:
-                    message = "追加することができませんでした"
-                else:
-                    input_add[0].tasks.add(task)
-            if len(input_remove) != 0:
-                input_remove[0].tasks.remove(task)
 
             return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
 
@@ -203,6 +191,51 @@ def revise(request, task_id):
         "message": message, 
         "task": task, 
         "form": ReviseForm(initial_value), 
+        "now": now
+    })
+
+@login_checker
+def reassign(request, task_id):
+    message = ""
+    task = Task.objects.get(id = task_id)
+    assigned_worker = task.workers.all()
+    non_assigned_worker = Worker.objects.exclude(tasks=task).all()
+    if len(task.workers.all()) >= task.capacity:
+        message = "定員のため、勤務者の追加はできません"
+        non_assigned_worker = Worker.objects.none()
+    
+
+    if request.method == "POST":
+        form = ReassignForm(request.POST)
+        # デフォルトのクエリセットにはフォームから送信された送信された値が入ってないから, ここで教えてあげる必要がある. 
+        form.fields["add"].queryset = non_assigned_worker
+        form.fields["remove"].queryset = assigned_worker
+        if form.is_valid():
+            added_worker = form.cleaned_data["add"]
+            removed_worker = form.cleaned_data["remove"]
+
+            if added_worker != None:
+                added_worker.tasks.add(task)
+            if removed_worker != None:
+                removed_worker.tasks.remove(task)
+
+            return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+
+    
+    assigned_worker = task.workers.all()
+    non_assigned_worker = Worker.objects.exclude(tasks=task).all()
+    if len(task.workers.all()) >= task.capacity:
+        message = "定員のため、勤務者の追加はできません"
+        non_assigned_worker = Worker.objects.none()
+    
+    form = ReassignForm()
+    form.fields["add"].queryset = non_assigned_worker
+    form.fields["remove"].queryset = assigned_worker
+
+    return render(request, "shift/reassign.html", {
+        "message": message,
+        "task": task, 
+        "form": form, 
         "now": now
     })
 

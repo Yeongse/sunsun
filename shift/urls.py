@@ -12,6 +12,7 @@ urlpatterns = [
     path("personal", views.personal, name="personal"), 
     path("make", views.make, name="make"), 
     path("revise/<int:task_id>", views.revise, name="revise"), 
+    path("reassign/<int:task_id>", views.reassign, name="reassign"), 
     path("register", views.register, name="register"), 
     path("feedback", views.feedback, name="feedback")
 ]

@@ -1,5 +1,6 @@
 from django import forms
 from pkg_resources import require
+from .models import *
 
 class LoginForm(forms.Form):
     name = forms.CharField(label="ユーザ名", widget=forms.TextInput(attrs={"placeholder": "姓名を漢字で空白無しで"}))
@@ -28,8 +29,10 @@ class ReviseForm(forms.Form):
     type = forms.ChoiceField(label="業務種別", choices=(("CL外業務", "CL外業務"), ("CL業務", "CL業務"), ("その他", "その他")))
     capacity = forms.IntegerField(label="募集人数")
     extra = forms.CharField(label="特筆事項", widget=forms.Textarea())
-    add = forms.CharField(label="勤務者の追加", widget=forms.TextInput(attrs={"placeholder": "姓名を漢字で空白無しで"}), initial="", required=False)
-    remove = forms.CharField(label="勤務者の削除", widget=forms.TextInput(attrs={"placeholder": "姓名を漢字で空白無しで"}), initial="", required=False)
+
+class ReassignForm(forms.Form):
+    add = forms.ModelChoiceField(label="出勤者の追加", required=False, queryset=Worker.objects.none())
+    remove = forms.ModelChoiceField(label="出勤者の削除", required=False, queryset=Worker.objects.none())
 
 class MakeForm(forms.Form):
     name = forms.CharField(label="ユーザ名", widget=forms.TextInput(attrs={"placeholder": "姓名を漢字で空白無しで"}))
