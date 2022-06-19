@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.hashers import make_password, check_password
 
 from .models import Task, Worker, Feedback
-from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, ReviseForm, ReassignForm, MakeForm
+from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, ReviseForm, ReassignForm, MakeForm, RecallForm
 
 
 import datetime
@@ -143,8 +143,61 @@ def personal(request):
     })
 
 @login_checker
-def make(request):
-    return HttpResponse("make")
+def make(request, task_id):
+    if request.method == "POST":
+        form = MakeForm(request.POST)
+        if form.is_valid():
+            input_name = form.cleaned_data["name"]
+            input_date = form.cleaned_data["date"]
+            input_startTime = form.cleaned_data["startTime"]
+            input_endTime = form.cleaned_data["endTime"]
+            input_specification = form.cleaned_data["specification"]
+            input_type = form.cleaned_data["type"]
+            input_capacity = form.cleaned_data["capacity"]
+            input_extra = form.cleaned_data["extra"]
+
+            task = Task(
+                name=input_name, 
+                date=input_date, 
+                startTime=input_startTime, 
+                endTime=input_endTime, 
+                specification=input_specification, 
+                type=input_type, 
+                capacity=input_capacity, 
+                extra=input_extra
+                )
+            task.save()
+
+            return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+
+    initial_value = {}
+    # 初期値0以外のtask_idが渡された場合, formの初期値を設定する
+    if task_id != 0:
+        past_task = Task.objects.get(id=task_id)
+        initial_value = {
+            "name": past_task.name, 
+            "specification": past_task.specification, 
+            "date": past_task.date, 
+            "startTime": past_task.startTime, 
+            "endTime": past_task.endTime, 
+            "type": past_task.type, 
+            "capacity": past_task.capacity, 
+            "extra": past_task.extra
+        }
+    return render(request, "shift/make.html", {
+        "now": now, 
+        "recall_form": RecallForm(), 
+        "make_form": MakeForm(initial=initial_value)
+    })
+
+@login_checker
+def recall(request):
+    if request.method == "POST":
+        form = RecallForm(request.POST)
+        if form.is_valid():
+            task = form.cleaned_data["task"]
+            past_task = task
+            return HttpResponseRedirect(reverse("shift:make", args=[task.id]))
 
 @login_checker
 def revise(request, task_id):
@@ -198,18 +251,10 @@ def revise(request, task_id):
 def reassign(request, task_id):
     message = ""
     task = Task.objects.get(id = task_id)
-    assigned_worker = task.workers.all()
-    non_assigned_worker = Worker.objects.exclude(tasks=task).all()
-    if len(task.workers.all()) >= task.capacity:
-        message = "定員のため、勤務者の追加はできません"
-        non_assigned_worker = Worker.objects.none()
     
 
     if request.method == "POST":
         form = ReassignForm(request.POST)
-        # デフォルトのクエリセットにはフォームから送信された送信された値が入ってないから, ここで教えてあげる必要がある. 
-        form.fields["add"].queryset = non_assigned_worker
-        form.fields["remove"].queryset = assigned_worker
         if form.is_valid():
             added_worker = form.cleaned_data["add"]
             removed_worker = form.cleaned_data["remove"]

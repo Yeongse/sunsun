@@ -1,4 +1,17 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
+    <form action="{% url 'shift:recall' %}" method="post">
+        {% csrf_token %}
+        {{ recall_form }}
+        <input type="submit">
+    </form>
 
+    <form action="{% url 'shift:make' 0 %}" method="post">
+        {% csrf_token %}
+        {{ make_form }}
+        <input type="submit">
+    </form>
+
+
+    <a href="{% url "shift:home" now.year now.month %}">ホームに戻る</a>
 {% endblock %}
