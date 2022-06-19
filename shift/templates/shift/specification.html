@@ -12,6 +12,7 @@
     <p></p>
 
     {% if worker.is_admin %}
+        <p>この業務の出勤者</p>
         <ul>
             {% for worker in workers_of_task %}
                 <li>{{ worker.name }}</li>

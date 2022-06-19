@@ -309,6 +309,10 @@ def register(request):
     })
 
 @login_checker
+def instruction(request):
+    return render(request, "shift/instruction.html", {"now": now})
+
+@login_checker
 def feedback(request):
     if request.method == "POST":
         form = FeedbackForm(request.POST)

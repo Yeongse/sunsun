@@ -14,6 +14,7 @@ urlpatterns = [
     path("recall", views.recall, name="recall"), 
     path("revise/<int:task_id>", views.revise, name="revise"), 
     path("reassign/<int:task_id>", views.reassign, name="reassign"), 
-    path("register", views.register, name="register"), 
+    path("register", views.register, name="register"),
+    path("instruction", views.instruction, name="instruction"),  
     path("feedback", views.feedback, name="feedback")
 ]
