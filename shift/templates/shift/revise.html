@@ -1,5 +1,7 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
+    <h1 class="theme">業務修正画面</h1>
+
     <form action="{% url 'shift:revise' task.id %}" method="post">
         {% csrf_token %}
         {{ form }}

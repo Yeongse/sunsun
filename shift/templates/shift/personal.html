@@ -1,6 +1,7 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
-    <h1>{{ err_message }}</h1>
+    <h1 class="theme">登録情報変更画面</h1>
+    <p class="message">{{ message }}</p>
 
     <form action="{% url 'shift:personal' %}" method="post">
         {% csrf_token %}

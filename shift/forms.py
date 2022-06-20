@@ -46,4 +46,4 @@ class MakeForm(forms.Form):
     extra = forms.CharField(label="特筆事項", widget=forms.Textarea())
 
 class RecallForm(forms.Form):
-    task = forms.ModelChoiceField(label="過去の業務を呼び出す", queryset=Task.objects.all())
+    pastTask = forms.ModelChoiceField(label="過去の業務を呼び出す", queryset=Task.objects.all())

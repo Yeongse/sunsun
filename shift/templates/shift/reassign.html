@@ -1,6 +1,8 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
-    <h1>{{ message }}</h1>
+    <h1 class="theme">勤務予定者変更画面</h1>
+    <p class="message">{{ message }}</p>
+
     <form action="{% url 'shift:reassign' task.id %}" method="post">
         {% csrf_token %}
         {{ form }}

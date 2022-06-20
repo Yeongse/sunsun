@@ -1,7 +1,7 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
-    
-    <h1>業務詳細</h1>
+    <h1 class="theme">業務詳細画面</h1>
+
     <p>名前: {{ task.name }}</p>
     <p>日付: {{ task.date }}</p>
     <p>時間: {{ task.startTime }}〜{{ task.endTime }}</p>
@@ -9,7 +9,6 @@
     <p>業務種別: {{ task.type }}</p>
     <p>募集人数: {{ task.capacity }}人</p>
     <p>特筆事項: {{ task.extra }}</p>
-    <p></p>
 
     {% if worker.is_admin %}
         <p>この業務の出勤者</p>

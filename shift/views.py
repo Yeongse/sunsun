@@ -21,10 +21,9 @@ def login_checker(func):
 
 # Create your views here.
 def login(request):
-    err_message = ""
+    message = ""
     if request.method ==  "POST":
         form = LoginForm(request.POST)
-
         if form.is_valid():
             input_name = form.cleaned_data["name"]
             input_password = form.cleaned_data["password"]
@@ -32,7 +31,7 @@ def login(request):
 
             # check username
             if len(matched_workers) == 0:
-                err_message = "ユーザ名が正しくありません"
+                message = "ユーザ名が正しくありません"
             else:
                 worker = matched_workers[0]
                 is_auth = check_password(input_password, worker.password)
@@ -42,10 +41,11 @@ def login(request):
                     request.session["worker_id"] = worker.id
                     return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
                 else:
-                    err_message = "パスワードが正しくありません"            
-       
+                    message = "パスワードが正しくありません"            
+    
+
     return render(request, "shift/login.html", {
-        "message": err_message, 
+        "message": message, 
         "form": LoginForm()
     })
 
@@ -62,14 +62,14 @@ def home(request, year, month):
         for day in week:
             day_tasks = Task.objects.filter(date=day)
 
-            # 業務とそこで今のところ配属された人数をまとめて辞書で保存
-            # jinjaの中でtask.workers.all()っていうクエリを書けへんかったからこうしてる
+            # 業務とそこで今のところ配属された人数をまとめて辞書で保存して渡す
             task_and_members = []
             for task in day_tasks:
                 task_and_members.append({"task": task, "member_num": len(task.workers.all())})
 
             day_days_tasks = {"day": day, "task_and_members": task_and_members }
             week_days_tasks.append(day_days_tasks)
+        
         month_days_tasks.append(week_days_tasks)
     
     return render(request, "shift/home.html", {
@@ -84,9 +84,9 @@ def specification(request, task_id):
     worker = Worker.objects.get(id=request.session["worker_id"])
     
     if request.method == "POST":
-        # データ自体はちゃんと格納されている
         worker.tasks.add(task)
         return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+    
     return render(request, "shift/specification.html", {
         "task": task, 
         "member_num": len(task.workers.all()), 
@@ -99,6 +99,7 @@ def specification(request, task_id):
 def confirm(request):
     worker = Worker.objects.get(id=request.session["worker_id"])
     tasks = worker.tasks.all()
+
     return render(request, "shift/confirm.html", {
         "tasks": tasks
     })
@@ -106,26 +107,25 @@ def confirm(request):
 @login_checker
 def personal(request):
     worker = Worker.objects.get(id=request.session["worker_id"])
-    err_message = ""
+    message = ""
     
     if request.method == "POST":
         form = PersonalForm(request.POST)
-
         if form.is_valid():
             input_name = form.cleaned_data["name"]
             input_password1 = form.cleaned_data["password1"]
             input_password2 = form.cleaned_data["password2"]
             input_email = form.cleaned_data["email"]
 
+            # 2回入力のパスワードが合っているかの確認
             if input_password1 == input_password2:
                 worker.name = input_name
                 worker.password = make_password(input_password1)
                 worker.email = input_email
                 worker.save()
                 return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
-
             else:
-                err_message = "パスワードが一致していません"
+                message = "パスワードが一致していません"
     
     initial_value = {
         "name": worker.name, 
@@ -133,14 +133,15 @@ def personal(request):
         "password2": "", 
         "email": worker.email
     }
+    
     return render(request, "shift/personal.html", {
         "worker": worker, 
         "form": PersonalForm(initial=initial_value), 
-        "err_message": err_message
+        "message": message
     })
 
 @login_checker
-def make(request, task_id):
+def make(request, past_task_id):
     if request.method == "POST":
         form = MakeForm(request.POST)
         if form.is_valid():
@@ -164,13 +165,12 @@ def make(request, task_id):
                 extra=input_extra
                 )
             task.save()
-
             return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
 
     initial_value = {}
-    # 初期値0以外のtask_idが渡された場合, formの初期値を設定する
-    if task_id != 0:
-        past_task = Task.objects.get(id=task_id)
+    # 初期値0以外のpast_task_idが渡された場合, formの初期値を設定する
+    if past_task_id != 0:
+        past_task = Task.objects.get(id=past_task_id)
         initial_value = {
             "name": past_task.name, 
             "specification": past_task.specification, 
@@ -181,6 +181,7 @@ def make(request, task_id):
             "capacity": past_task.capacity, 
             "extra": past_task.extra
         }
+    
     return render(request, "shift/make.html", {
         "recall_form": RecallForm(), 
         "make_form": MakeForm(initial=initial_value)
@@ -191,9 +192,8 @@ def recall(request):
     if request.method == "POST":
         form = RecallForm(request.POST)
         if form.is_valid():
-            task = form.cleaned_data["task"]
-            past_task = task
-            return HttpResponseRedirect(reverse("shift:make", args=[task.id]))
+            past_task = form.cleaned_data["pastTask"]
+            return HttpResponseRedirect(reverse("shift:make", args=[past_task.id]))
 
 @login_checker
 def revise(request, task_id):
@@ -258,10 +258,8 @@ def reassign(request, task_id):
                 added_worker.tasks.add(task)
             if removed_worker != None:
                 removed_worker.tasks.remove(task)
-
             return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
 
-    
     assigned_worker = task.workers.all()
     non_assigned_worker = Worker.objects.exclude(tasks=task).all()
     if len(task.workers.all()) >= task.capacity:
@@ -280,17 +278,16 @@ def reassign(request, task_id):
 
 @login_checker
 def register(request):
-    err_message = ""
+    message = ""
     if request.method == "POST":
         form = RegisterForm(request.POST)
-
         if form.is_valid():
             input_name = form.cleaned_data["name"]
             input_email = form.cleaned_data["email"]
             input_is_admin = form.cleaned_data["is_admin"]
 
             if len(Worker.objects.filter(email=input_email)) > 0:
-                err_message = "そのユーザは既に登録されています"
+                message = "そのユーザは既に登録されています"
             else:
                 worker = Worker(name=input_name, email=input_email, password=make_password("0000"), is_admin=input_is_admin)
                 worker.save()
@@ -298,18 +295,17 @@ def register(request):
             
     return render(request, "shift/register.html", {
         "form": RegisterForm(), 
-        "err_message": err_message
+        "message": message
     })
 
 @login_checker
 def instruction(request):
-    return render(request, "shift/instruction.html", {"now": now})
+    return render(request, "shift/instruction.html", {})
 
 @login_checker
 def feedback(request):
     if request.method == "POST":
         form = FeedbackForm(request.POST)
-
         if form.is_valid():
             input_text = form.cleaned_data["text"]
             feedback = Feedback(text=input_text, response="", date=now)

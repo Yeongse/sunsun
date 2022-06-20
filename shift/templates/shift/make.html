@@ -1,5 +1,7 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
+    <h1 class="theme">新規業務作成画面</h1>
+
     <form action="{% url 'shift:recall' %}" method="post">
         {% csrf_token %}
         {{ recall_form }}
