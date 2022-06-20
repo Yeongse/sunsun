@@ -92,8 +92,7 @@ def specification(request, task_id):
         "member_num": len(task.workers.all()), 
         "worker": worker, 
         "workers_of_task": task.workers.all(), 
-        "tasks_of_worker": worker.tasks.all(),
-        "now": now
+        "tasks_of_worker": worker.tasks.all()
     })
 
 @login_checker
@@ -101,8 +100,7 @@ def confirm(request):
     worker = Worker.objects.get(id=request.session["worker_id"])
     tasks = worker.tasks.all()
     return render(request, "shift/confirm.html", {
-        "tasks": tasks, 
-        "now": now
+        "tasks": tasks
     })
 
 @login_checker
@@ -138,7 +136,6 @@ def personal(request):
     return render(request, "shift/personal.html", {
         "worker": worker, 
         "form": PersonalForm(initial=initial_value), 
-        "now": now, 
         "err_message": err_message
     })
 
@@ -185,7 +182,6 @@ def make(request, task_id):
             "extra": past_task.extra
         }
     return render(request, "shift/make.html", {
-        "now": now, 
         "recall_form": RecallForm(), 
         "make_form": MakeForm(initial=initial_value)
     })
@@ -243,8 +239,7 @@ def revise(request, task_id):
     return render(request, "shift/revise.html", {
         "message": message, 
         "task": task, 
-        "form": ReviseForm(initial_value), 
-        "now": now
+        "form": ReviseForm(initial_value)
     })
 
 @login_checker
@@ -280,8 +275,7 @@ def reassign(request, task_id):
     return render(request, "shift/reassign.html", {
         "message": message,
         "task": task, 
-        "form": form, 
-        "now": now
+        "form": form
     })
 
 @login_checker
@@ -304,7 +298,6 @@ def register(request):
             
     return render(request, "shift/register.html", {
         "form": RegisterForm(), 
-        "now": now, 
         "err_message": err_message
     })
 
@@ -326,6 +319,5 @@ def feedback(request):
     feedbacks = Feedback.objects.all()
     return render(request, "shift/feedback.html", {
         "form": FeedbackForm(), 
-        "feedbacks": feedbacks, 
-        "now": now
+        "feedbacks": feedbacks
     })
