@@ -317,3 +317,8 @@ def feedback(request):
         "form": FeedbackForm(), 
         "feedbacks": feedbacks
     })
+
+@login_checker
+def logout(request):
+    del request.session["worker_id"]
+    return HttpResponseRedirect(reverse("shift:login"))
