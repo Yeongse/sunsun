@@ -6,5 +6,5 @@
         <a href="{% url "shift:specification" task.id %}">{{ task.date }}: {{ task.name }}</a>
      {% endfor %}
 
-    <a href="{% url "shift:home" Now.year Now.month %}">ホームに戻る</a>
+    <a href="{% url 'shift:home' Now.year Now.month %}">ホームに戻る</a>
 {% endblock %}

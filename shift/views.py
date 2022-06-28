@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.hashers import make_password, check_password
 
 from .models import Task, Worker, Feedback
-from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, ReviseForm, ReassignForm, MakeForm, RecallForm
+from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, DeleteForm, ReviseForm, ReassignForm, MakeForm, RecallForm
 
 
 import datetime
@@ -22,6 +22,7 @@ def login_checker(func):
 # Create your views here.
 def login(request):
     message = ""
+
     if request.method ==  "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -246,7 +247,6 @@ def revise(request, task_id):
 def reassign(request, task_id):
     message = ""
     task = Task.objects.get(id = task_id)
-    
 
     if request.method == "POST":
         form = ReassignForm(request.POST)
@@ -296,6 +296,31 @@ def register(request):
     return render(request, "shift/register.html", {
         "form": RegisterForm(), 
         "message": message
+    })
+
+@login_checker
+def delete(request):
+    message = ""
+
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            delete_worker = form.cleaned_data["delete"]
+            assigned_task = delete_worker.tasks.all()
+            future_task = assigned_task.filter(date__gt=now)
+
+            if len(future_task) > 0:
+                message = "勤務予定の業務があるので削除できませんでした"
+            else:
+                delete_worker.delete()
+                return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+    
+    form = DeleteForm()
+    form.fields["delete"].queryset = Worker.objects.exclude(id=request.session["worker_id"]).all()
+
+    return render(request, "shift/delete.html", {
+        "message": message, 
+        "form": form
     })
 
 @login_checker

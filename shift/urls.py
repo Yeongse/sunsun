@@ -15,6 +15,7 @@ urlpatterns = [
     path("revise/<int:task_id>", views.revise, name="revise"), 
     path("reassign/<int:task_id>", views.reassign, name="reassign"), 
     path("register", views.register, name="register"),
+    path("delete", views.delete, name="delete"), 
     path("instruction", views.instruction, name="instruction"),  
     path("feedback", views.feedback, name="feedback"), 
     path("logout", views.logout, name="logout")

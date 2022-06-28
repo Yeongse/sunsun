@@ -18,11 +18,14 @@ class PersonalForm(forms.Form):
 class RegisterForm(forms.Form):
     name = forms.CharField(label="ユーザ名", widget=forms.TextInput(attrs={"placeholder": "姓名を漢字で空白無しで"}))
     email = forms.CharField(label="メールアドレス", widget=forms.TextInput(attrs={"placeholder": "メールアドレス"}))
-    is_admin = forms.BooleanField()
+    is_admin = forms.BooleanField(required=False)
+
+class DeleteForm(forms.Form):
+    delete = forms.ModelChoiceField(label="削除する従業員", queryset=Worker.objects.all())
 
 class ReviseForm(forms.Form):
     name = forms.CharField(label="名前")
-    date = forms.DateField(label="日付")
+    date = forms.DateField(label="日付", widget=forms.TextInput(attrs={"placeholder": "XXXX-YY-ZZ"}))
     startTime = forms.CharField(label="開始時刻", widget=forms.TextInput(attrs={"placeholder": "XX:YY"}))
     endTime = forms.CharField(label="終了時刻", widget=forms.TextInput(attrs={"placeholder": "XX:YY"}))
     specification = forms.CharField(label="詳細内容", widget=forms.Textarea())

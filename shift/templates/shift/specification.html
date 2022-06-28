@@ -19,9 +19,9 @@
                 <li>この業務の応募者はまだいません</li>
             {% endfor %}
         <ul>
-        <a href="{% url "shift:revise" task.id %}">この業務を修正する</a>
+        <a href="{% url 'shift:revise' task.id %}">この業務を修正する</a>
     {% else %}
-        <form action="{% url "shift:specification" task.id %}" method="post"> 
+        <form action="{% url 'shift:specification' task.id %}" method="post"> 
             {% csrf_token %}
             {% comment %} 自分がまだ応募していないか→埋まってないか {% endcomment %}
             {% if task not in tasks_of_worker %}
@@ -39,5 +39,5 @@
         </form>
     {% endif %}
     
-    <a href="{% url "shift:home" Now.year Now.month %}">ホームに戻る</a>
+    <a href="{% url 'shift:home' Now.year Now.month %}">ホームに戻る</a>
 {% endblock %}
