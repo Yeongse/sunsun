@@ -76,9 +76,9 @@
         <a href="{% url 'shift:instruction' %}">このアプリの説明書を見る</a>
     {% else %}
         <a href="{% url 'shift:confirm' %}">勤務確認</a>
-        <a href="{% url 'shift:personal' %}">登録情報の変更</a>
     {% endif %}
     
+    <a href="{% url 'shift:personal' %}">登録情報の変更</a>
     <a href="{% url 'shift:feedback' %}">開発者へのフィードバック</a>
     <a href="{% url 'shift:logout' %}">ログアウトする</a>
 {% endblock %}

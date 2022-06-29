@@ -4,19 +4,19 @@ from .models import *
 
 class LoginForm(forms.Form):
     name = forms.CharField(label="ユーザ名", widget=forms.TextInput(attrs={"placeholder": "姓名を漢字で空白無しで"}))
-    password = forms.CharField(label="パスワード", widget=forms.TextInput(attrs={"placeholder": "Password"}))
+    password = forms.CharField(label="パスワード", widget=forms.PasswordInput(), min_length=4)
 
 class InitializeForm(forms.Form):
-    password1 = forms.CharField(label="パスワード(4文字以上)", widget=forms.TextInput(attrs={"placeholder": "Password"}))
-    password2 = forms.CharField(label="パスワードをもう一度", widget=forms.TextInput(attrs={"placeholder": "Password"}))
+    password1 = forms.CharField(label="パスワード(4文字以上)", widget=forms.PasswordInput(), min_length=4)
+    password2 = forms.CharField(label="パスワードをもう一度", widget=forms.PasswordInput(), min_length=4)
 
 class FeedbackForm(forms.Form):
     text = forms.CharField(label="内容", widget=forms.Textarea())
 
 class PersonalForm(forms.Form):
     name = forms.CharField(label="ユーザ名", widget=forms.TextInput(attrs={"placeholder": "姓名を漢字で空白無しで"}))
-    password1 = forms.CharField(label="パスワード", widget=forms.TextInput(attrs={"placeholder": "Password"}))
-    password2 = forms.CharField(label="パスワードをもう一度", widget=forms.TextInput(attrs={"placeholder": "Password"}))
+    password1 = forms.CharField(label="パスワード", widget=forms.PasswordInput(), min_length=4)
+    password2 = forms.CharField(label="パスワードをもう一度", widget=forms.PasswordInput(), min_length=4)
     email = forms.CharField(label="メールアドレス", widget=forms.TextInput(attrs={"placeholder": "姓名を漢字で空白無しで"}))
 
 class RegisterForm(forms.Form):
