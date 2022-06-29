@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib.auth.hashers import make_password, check_password
 
 from .models import Task, Worker, Feedback
-from .forms import LoginForm, FeedbackForm, PersonalForm, RegisterForm, DeleteForm, ReviseForm, ReassignForm, MakeForm, RecallForm
+from .forms import LoginForm, InitializeForm, FeedbackForm, PersonalForm, RegisterForm, DeleteForm, ReviseForm, ReassignForm, MakeForm, RecallForm
 
 
 import datetime
@@ -30,17 +30,21 @@ def login(request):
             input_password = form.cleaned_data["password"]
             matched_workers = Worker.objects.filter(name=input_name)
 
-            # check username
+            # ユーザ名の確認
             if len(matched_workers) == 0:
                 message = "ユーザ名が正しくありません"
             else:
                 worker = matched_workers[0]
                 is_auth = check_password(input_password, worker.password)
 
-                # check password
+                # パスワードの確認
                 if is_auth:
                     request.session["worker_id"] = worker.id
-                    return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+                    # 初期パスワードの場合に変更を強制
+                    if input_password == "0000":
+                        return HttpResponseRedirect(reverse("shift:initialize"))
+                    else:
+                        return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
                 else:
                     message = "パスワードが正しくありません"            
     
@@ -48,6 +52,34 @@ def login(request):
     return render(request, "shift/login.html", {
         "message": message, 
         "form": LoginForm()
+    })
+
+@login_checker
+def initialize(request):
+    message = ""
+    worker = Worker.objects.get(id=request.session["worker_id"])
+
+    if request.method == "POST":
+        form = InitializeForm(request.POST)
+        if form.is_valid():
+            input_password1 = form.cleaned_data["password1"]
+            input_password2 = form.cleaned_data["password2"]
+
+            # 2回入力のパスワードが合っているかの確認
+            if input_password1 == input_password2:
+                # 変更なしを許さない
+                if input_password1 == "0000":
+                    message = "パスワードを変更してください"
+                else:
+                    worker.password = make_password(input_password1)
+                    worker.save()
+                return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+            else:
+                message = "パスワードが一致していません"
+
+    return render(request, "shift/initialize.html", {
+        "message": message, 
+        "form": InitializeForm()
     })
 
 @login_checker

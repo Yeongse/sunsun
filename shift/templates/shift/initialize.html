@@ -1,0 +1,11 @@
+{% extends 'shift/layout.html' %}
+{% block body %}
+    <h1 class="theme">初期パスワードの変更画面</h1>
+    <p class="message">{{ message }}</p>
+
+    <form action="{% url 'shift:initialize' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit">
+    </form>
+{% endblock %}

@@ -6,6 +6,7 @@ app_name = "shift"
 
 urlpatterns = [
     path("login", views.login, name="login"), 
+    path("initialize", views.initialize, name="initialize"), 
     path("home/<int:year>/<int:month>", views.home, name="home"), 
     path("specification/<int:task_id>", views.specification, name="specification"), 
     path("confirm", views.confirm, name="confirm"), 
