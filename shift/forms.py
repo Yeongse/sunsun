@@ -44,7 +44,7 @@ class ReassignForm(forms.Form):
 
 class MakeForm(forms.Form):
     name = forms.CharField(label="名前")
-    date = forms.DateField(label="日付")
+    date = forms.DateField(label="日付", widget=forms.TextInput(attrs={"placeholder": "XXXX-YY-ZZ"}))
     startTime = forms.CharField(label="開始時刻", widget=forms.TextInput(attrs={"placeholder": "XX:YY"}))
     endTime = forms.CharField(label="終了時刻", widget=forms.TextInput(attrs={"placeholder": "XX:YY"}))
     specification = forms.CharField(label="詳細内容", widget=forms.Textarea())

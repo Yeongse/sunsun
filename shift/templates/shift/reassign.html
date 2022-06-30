@@ -9,6 +9,6 @@
         <input type="submit">
     </form>
 
-    <a href="{% url 'shift:revise' task.id %}">修正画面に戻る</a>
-    <a href="{% url 'shift:home' Now.year Now.month %}">ホームに戻る</a>
+    <a href="{% url 'shift:revise' task.id %}" class="btn btn-primary">修正画面に戻る</a>
+    <a href="{% url 'shift:home' Now.year Now.month %}" class="btn btn-primary">ホームに戻る</a>
 {% endblock %}

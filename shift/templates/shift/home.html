@@ -1,8 +1,4 @@
 {% extends 'shift/layout.html' %}
-{% block head %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-{% endblock %}
 
 {% block body %}
     <h1 class="theme">ホーム画面</h1>
@@ -13,18 +9,18 @@
     {{ calendar_data.month_current | date:"Y年m月" }}
     <a href="{% url 'shift:home' calendar_data.month_next.year calendar_data.month_next.month %}">次の月</a>
 
-    <table class="table">
+    <table class="table table-bordered table-sm table-striped">
         {% comment %} 曜日が一番上にヘッダーとして並ぶ {% endcomment %}
-        <thead>
-        <tr>
-            {% for w in calendar_data.week_names %}
-                <th>{{ w }}</th>
-            {% endfor %}
-        </tr>
+        <thead class="days">
+            <tr>
+                {% for w in calendar_data.week_names %}
+                    <th>{{ w }}</th>
+                {% endfor %}
+            </tr>
         </thead>
 
         {% comment %} カレンダーの中身 {% endcomment %}
-        <tbody>
+        <tbody class="inner-calendar">
         {% for week_days_tasks in month_days_tasks%}
 
             <tr>
@@ -68,17 +64,18 @@
         {% endfor %}
         </tbody>
     </table>
+    <p class="complement">&#9675;: 募集中, X: 締切</p>
 
     {% if worker.is_admin %}
-        <a href="{% url 'shift:make' 0 %}">新しい業務を作成する</a>
-        <a href="{% url 'shift:register' %}">新しい従業員を登録する</a>
-        <a href="{% url 'shift:delete' %}">従業員を削除する</a>
-        <a href="{% url 'shift:instruction' %}">このアプリの説明書を見る</a>
+        <a href="{% url 'shift:make' 0 %}" class="btn btn-primary">新しい業務を作成する</a>
+        <a href="{% url 'shift:register' %}" class="btn btn-primary">新しい従業員を登録する</a>
+        <a href="{% url 'shift:delete' %}" class="btn btn-primary">従業員を削除する</a>
+        <a href="{% url 'shift:instruction' %}" class="btn btn-primary">このアプリの説明書を見る</a>
     {% else %}
-        <a href="{% url 'shift:confirm' %}">勤務確認</a>
+        <a href="{% url 'shift:confirm' %}" class="btn btn-primary">勤務確認</a>
     {% endif %}
     
-    <a href="{% url 'shift:personal' %}">登録情報の変更</a>
-    <a href="{% url 'shift:feedback' %}">開発者へのフィードバック</a>
-    <a href="{% url 'shift:logout' %}">ログアウトする</a>
+    <a href="{% url 'shift:personal' %}" class="btn btn-primary">登録情報の変更</a>
+    <a href="{% url 'shift:feedback' %}" class="btn btn-primary">開発者へのフィードバック</a>
+    <a href="{% url 'shift:logout' %}" class="btn btn-primary">ログアウトする</a>
 {% endblock %}

@@ -1,6 +1,7 @@
 {% extends 'shift/layout.html' %}
-{% block body %}
+
 {% load static %}
+{% block body %}
     <iframe id="pdf" src="{% static 'shift/instruction.pdf' %}" width="100%" height="800" onload="adjuster()"></iframe>
     <script>
         const pdf = document.getElementById("pdf");

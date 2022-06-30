@@ -1,0 +1,39 @@
+.header {
+    text-align: center;
+    background-color:blue;
+    color: white;
+    margin-bottom: 5px;
+    border:solid thin black;
+    border-radius: 3px;
+}
+
+.content {
+    margin-left: 5px; 
+    margin-right: 5px; 
+}
+
+.theme {
+    text-align: center;
+    margin-bottom: 5px;
+    border-bottom: solid thin black;
+}
+
+.days {
+    background-color: darkseagreen;
+}
+
+.inner-calendar {
+    font-size: 13px;
+    padding: 0px;
+    margin: 0px; 
+}
+
+.complement {
+    text-align: right;
+    margin-right: 20px;
+}
+
+.btn {
+    margin-top: 5px; 
+    margin-bottom: 5px;
+}

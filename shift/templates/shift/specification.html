@@ -1,43 +1,74 @@
 {% extends 'shift/layout.html' %}
 {% block body %}
     <h1 class="theme">業務詳細画面</h1>
-
-    <p>名前: {{ task.name }}</p>
-    <p>日付: {{ task.date }}</p>
-    <p>時間: {{ task.startTime }}〜{{ task.endTime }}</p>
-    <p>詳細内容: {{ task.specification }}</p>
-    <p>業務種別: {{ task.type }}</p>
-    <p>募集人数: {{ task.capacity }}人</p>
-    <p>特筆事項: {{ task.extra }}</p>
-
-    {% if worker.is_admin %}
-        <p>この業務の出勤者</p>
-        <ul>
-            {% for worker in workers_of_task %}
-                <li>{{ worker.name }}</li>
-            {% empty %}
-                <li>この業務の応募者はまだいません</li>
-            {% endfor %}
-        <ul>
-        <a href="{% url 'shift:revise' task.id %}">この業務を修正する</a>
-    {% else %}
-        <form action="{% url 'shift:specification' task.id %}" method="post"> 
-            {% csrf_token %}
-            {% comment %} 自分がまだ応募していないか→埋まってないか {% endcomment %}
-            {% if task not in tasks_of_worker %}
-                {% if member_num < task.capacity %}
-                    <h2>あなたはこの業務に応募できます</h2>
-                    <input type="submit" value="応募する">
-                {% else %}
-                    <h2>この業務の募集は締め切りました</h2>
-                    <input type="submit" value="応募する" disabled>
-                {% endif %}
-            {% else %}
-                <h2>あなたはこの業務に応募済です</h2>
-                <input type="submit" value="応募する" disabled>    
-            {% endif %}
-        </form>
-    {% endif %}
     
-    <a href="{% url 'shift:home' Now.year Now.month %}">ホームに戻る</a>
+    <div class="specification">
+        <table class="table table-bordered">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>名前</td>
+                    <td>{{ task.name }}</td>
+                </tr>
+                <tr>
+                    <td>日付</td>
+                    <td>{{ task.date }}</td>
+                </tr>
+                <tr>
+                    <td>時間</td>
+                    <td>{{ task.startTime }}〜{{ task.endTime }}</td>
+                </tr>
+                <tr>
+                    <td>詳細内容</td>
+                    <td>{{ task.specification }}</td>
+                </tr>
+                <tr>
+                    <td>業務種別</td>
+                    <td>{{ task.type }}</td>
+                </tr> 
+                <tr>
+                    <td>募集人数</td>
+                    <td>{{ task.capacity }}</td>
+                </tr>
+                <tr>
+                    <td>特筆事項</td>
+                    <td>{{ task.extra }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+
+        {% if worker.is_admin %}
+            <p>この業務の出勤者</p>
+                <ul>
+                    {% for worker in workers_of_task %}
+                        <li>{{ worker.name }}</li>
+                    {% empty %}
+                        <li>この業務の応募者はまだいません</li>
+                    {% endfor %}
+                </ul>
+            <a href="{% url 'shift:revise' task.id %}" class="btn btn-primary">この業務を修正する</a>
+    
+        {% else %}
+            <form action="{% url 'shift:specification' task.id %}" method="post"> 
+                {% csrf_token %}
+                {% comment %} 自分がまだ応募していないか→埋まってないか {% endcomment %}
+                {% if task not in tasks_of_worker %}
+                    {% if member_num < task.capacity %}
+                        <h2>あなたはこの業務に応募できます</h2>
+                        <input type="submit" value="応募する">
+                    {% else %}
+                        <h2>この業務の募集は締め切りました</h2>
+                        <input type="submit" value="応募する" disabled>
+                    {% endif %}
+                {% else %}
+                    <h2>あなたはこの業務に応募済です</h2>
+                    <input type="submit" value="応募する" disabled>    
+                {% endif %}
+            </form>
+        {% endif %}
+    </div> 
+
+    <a href="{% url 'shift:home' Now.year Now.month %}" class="btn btn-primary">ホームに戻る</a>
 {% endblock %}

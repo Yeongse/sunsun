@@ -19,5 +19,5 @@
         <p>{{ feedback.response }}</p>
     {% endfor %}
     
-    <a href="{% url 'shift:home' Now.year Now.month %}">ホームに戻る</a>
+    <a href="{% url 'shift:home' Now.year Now.month %}" class="btn btn-primary">ホームに戻る</a>
 {% endblock %}
