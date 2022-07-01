@@ -30,7 +30,7 @@
                 </tr> 
                 <tr>
                     <td>募集人数</td>
-                    <td>{{ task.capacity }}</td>
+                    <td>{{ task.capacity }}人</td>
                 </tr>
                 <tr>
                     <td>特筆事項</td>
@@ -52,7 +52,7 @@
             <a href="{% url 'shift:revise' task.id %}" class="btn btn-primary">この業務を修正する</a>
     
         {% else %}
-            <form action="{% url 'shift:specification' task.id %}" method="post"> 
+            <form action="{% url 'shift:specification' task.id %}" method="post" class="need-check"> 
                 {% csrf_token %}
                 {% comment %} 自分がまだ応募していないか→埋まってないか {% endcomment %}
                 {% if task not in tasks_of_worker %}

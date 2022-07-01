@@ -19,13 +19,12 @@
                     <td class="feedback-date">{{ feedback.date }}</td>
                     <td class="feedback-text">{{ feedback.text }}</td>
                     <td class="feedback-response">{{ feedback.response }}</td>
-        
             {% endfor %}
         </tbody>
     </table>
 
     <h4>送信フォーム</h4>
-    <form action="{% url 'shift:feedback' %}" method="post">
+    <form action="{% url 'shift:feedback' %}" method="post" class="need-check">
         {% csrf_token %}
         {{ form | crispy }}
         <input type="submit">
