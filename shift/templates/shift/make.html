@@ -1,16 +1,18 @@
 {% extends 'shift/layout.html' %}
+{% load crispy_forms_tags %}
+
 {% block body %}
     <h1 class="theme">新規業務作成画面</h1>
 
     <form action="{% url 'shift:recall' %}" method="post">
         {% csrf_token %}
-        {{ recall_form }}
+        {{ recall_form | crispy }}
         <input type="submit">
     </form>
 
     <form action="{% url 'shift:make' 0 %}" method="post">
         {% csrf_token %}
-        {{ make_form }}
+        {{ make_form | crispy }}
         <input type="submit">
     </form>
 

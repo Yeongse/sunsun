@@ -1,23 +1,35 @@
 {% extends 'shift/layout.html' %}
+{% load crispy_forms_tags %}
+
 {% block body %}
     <h1 class="theme">開発者へのフィードバック画面</h1>
 
-    <h2>送信フォーム</h2>
+    <h4>過去のフィードバック</h4>
+    <table class="table table-bordered table-sm table-striped">
+        <thead>
+            <tr>
+                <th>送信日時</th>
+                <th>内容</th>
+                <th>開発者からの返答</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for feedback in feedbacks %}
+                <tr>
+                    <td class="feedback-date">{{ feedback.date }}</td>
+                    <td class="feedback-text">{{ feedback.text }}</td>
+                    <td class="feedback-response">{{ feedback.response }}</td>
+        
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4>送信フォーム</h4>
     <form action="{% url 'shift:feedback' %}" method="post">
         {% csrf_token %}
-        {{ form }}
+        {{ form | crispy }}
         <input type="submit">
     </form>
-
-    <h2>過去のフィードバック</h2>
-    {% for feedback in feedbacks %}
-        <h3>送信日時: {{ feedback.date }}</h3>
-        <h3>内容</h3>
-        <p>{{ feedback.text }}</p>
-
-        <h3>開発者からの返答</h3>
-        <p>{{ feedback.response }}</p>
-    {% endfor %}
     
     <a href="{% url 'shift:home' Now.year Now.month %}" class="btn btn-primary">ホームに戻る</a>
 {% endblock %}

@@ -18,7 +18,7 @@
     border-bottom: solid thin black;
 }
 
-.days {
+thead {
     background-color: darkseagreen;
 }
 
@@ -36,4 +36,22 @@
 .btn {
     margin-top: 5px; 
     margin-bottom: 5px;
+}
+
+form {
+    width: 50vw;
+}
+
+input {
+    margin:5px;
+}
+
+.feedback-date {
+    width: 9vw;
+}
+.feedback-text {
+    width: 43vw;
+}
+.feedback-response {
+    width: 43vw;
 }

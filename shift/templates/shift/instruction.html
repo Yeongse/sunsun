@@ -3,6 +3,8 @@
 {% load static %}
 {% block body %}
     <iframe id="pdf" src="{% static 'shift/instruction.pdf' %}" width="100%" height="800" onload="adjuster()"></iframe>
+    <a href="{% url 'shift:home' Now.year Now.month %}" class="btn btn-primary">ホームに戻る</a>
+    
     <script>
         const pdf = document.getElementById("pdf");
     
@@ -10,5 +12,5 @@
           pdf.style.width = sub.contentWindow.document.body.scrollWidth + "px";
           pdf.style.height = sub.contentWindow.document.body.scrollHeight + "px";
         }
-      </script>
+    </script>
 {% endblock %}

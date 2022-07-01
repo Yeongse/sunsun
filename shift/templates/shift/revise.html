@@ -1,10 +1,12 @@
 {% extends 'shift/layout.html' %}
+{% load crispy_forms_tags %}
+
 {% block body %}
     <h1 class="theme">業務修正画面</h1>
 
     <form action="{% url 'shift:revise' task.id %}" method="post">
         {% csrf_token %}
-        {{ form }}
+        {{ form | crispy }}
         <input type="submit">
     </form>
 
