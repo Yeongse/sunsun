@@ -4,6 +4,14 @@
 {% block body %}
     <h1 class="theme">開発者へのフィードバック画面</h1>
 
+    {% if messages %}
+        <div class="messages messages-success" style="list-style: none;">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <h4>過去のフィードバック</h4>
     <table class="table table-bordered table-sm table-striped">
         <thead>

@@ -2,7 +2,14 @@
 
 {% block body %}
     <h1 class="theme">ホーム画面</h1>
-    <p class="message">お疲れ様です, {{ worker.name }}</p>
+
+    {% if messages %}
+        <div class="messages messages-success" style="list-style: none;">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     {% comment %} 前後の月への遷移 {% endcomment %}
     <a href="{% url 'shift:home' calendar_data.month_previous.year calendar_data.month_previous.month %}">前の月</a>

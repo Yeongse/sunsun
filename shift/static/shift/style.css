@@ -18,6 +18,55 @@
     border-bottom: solid thin black;
 }
 
+@keyframes hide {
+    0% {
+        opacity: 0;
+        height: 100%;
+        line-height: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    15% {
+        opacity: 1;
+        height: 100%;
+        line-height: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    80% {
+        opacity: 0;
+        height: 100%;
+        line-height: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    100% {
+        opacity: 0;
+        height: 0px;
+        line-height: 0px;
+        padding: 0px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+}
+
+.messages {
+    animation-name: hide;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+}
+
+.messages-success {
+    background-color: skyblue;
+}
+
+.messages-fail {
+    background-color: pink;
+}
+
 thead {
     background-color: darkseagreen;
 }
@@ -31,6 +80,13 @@ thead {
 .complement {
     text-align: right;
     margin-right: 20px;
+}
+
+.comment {
+    width: 60vw;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: pink;
 }
 
 .btn {

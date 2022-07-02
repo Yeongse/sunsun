@@ -3,6 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.mail import send_mail, EmailMessage
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.contrib import messages
 
 from .models import Task, Worker, Feedback
 from .forms import LoginForm, InitializeForm, FeedbackForm, PersonalForm, RegisterForm, DeleteForm, ReviseForm, ReassignForm, MakeForm, RecallForm
@@ -21,7 +25,6 @@ def login_checker(func):
 
 # Create your views here.
 def login(request):
-    message = ""
 
     if request.method ==  "POST":
         form = LoginForm(request.POST)
@@ -32,7 +35,7 @@ def login(request):
 
             # ユーザ名の確認
             if len(matched_workers) == 0:
-                message = "ユーザ名が正しくありません"
+                messages.error(request, "ユーザ名が正しくありません")
             else:
                 worker = matched_workers[0]
                 is_auth = check_password(input_password, worker.password)
@@ -44,13 +47,13 @@ def login(request):
                     if input_password == "0000":
                         return HttpResponseRedirect(reverse("shift:initialize"))
                     else:
+                        messages.success(request, f"お疲れ様です、{worker.name}様")
                         return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
                 else:
-                    message = "パスワードが正しくありません"            
+                    messages.error(request, "パスワードが正しくありません")         
     
 
     return render(request, "shift/login.html", {
-        "message": message, 
         "form": LoginForm()
     })
 
@@ -118,6 +121,18 @@ def specification(request, task_id):
     
     if request.method == "POST":
         worker.tasks.add(task)
+
+        # mail_subject = "申し込み完了の通知"
+        # mail_context = {
+        #     "task": task, 
+        #     "worker": worker
+        # }
+        # mail_message = render_to_string("shift/mails/apply_notice.html", mail_context, request)
+        # mail_from_email = settings.DEFAULT_FROM_EMAIL
+        # mail_recipient_list = [worker.email]
+        # send_mail(subject=mail_subject, message=mail_message, from_email=mail_from_email, recipient_list=mail_recipient_list)
+
+        messages.success(request, "業務への応募が完了しました")
         return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
     
     return render(request, "shift/specification.html", {
@@ -140,8 +155,7 @@ def confirm(request):
 @login_checker
 def personal(request):
     worker = Worker.objects.get(id=request.session["worker_id"])
-    message = ""
-    
+
     if request.method == "POST":
         form = PersonalForm(request.POST)
         if form.is_valid():
@@ -156,9 +170,10 @@ def personal(request):
                 worker.password = make_password(input_password1)
                 worker.email = input_email
                 worker.save()
+                messages.success(request, "登録情報が変更されました")
                 return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
             else:
-                message = "パスワードが一致していません"
+                messages.error(request, "パスワードが一致していません")
     
     initial_value = {
         "name": worker.name, 
@@ -169,8 +184,7 @@ def personal(request):
     
     return render(request, "shift/personal.html", {
         "worker": worker, 
-        "form": PersonalForm(initial=initial_value), 
-        "message": message
+        "form": PersonalForm(initial=initial_value)
     })
 
 @login_checker
@@ -198,6 +212,24 @@ def make(request, past_task_id):
                 extra=input_extra
                 )
             task.save()
+
+            # non_admin_workers = Worker.objects.exclude(is_admin=False).all()
+            # mail_subject = "募集開始の通知"
+            # mail_context = {
+            #     "task": task
+            # }
+            # mail_message = render_to_string("shift/mails/make_notice.html", mail_context, request)
+            # mail_bcc_list = [worker.email for worker in non_admin_workers]
+            # mail = EmailMessage(
+            #     subject=mail_subject, 
+            #     body=mail_message, 
+            #     from_email = settings.DEFAULT_FROM_EMAIL, 
+            #     to=settings.DEFAULT_FROM_EMAIL, 
+            #     bcc=mail_bcc_list
+            #     )
+            # mail.send()
+
+            messages.success(request, "業務が作成されました")
             return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
 
     initial_value = {}
@@ -230,7 +262,6 @@ def recall(request):
 
 @login_checker
 def revise(request, task_id):
-    message = ""
     task = Task.objects.get(id=task_id)
 
     if request.method == "POST":
@@ -256,6 +287,7 @@ def revise(request, task_id):
             task.extra = input_extra
             task.save()
 
+            messages.success(request, "業務が修正されました")
             return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
 
 
@@ -270,14 +302,13 @@ def revise(request, task_id):
         "extra": task.extra
     }
     return render(request, "shift/revise.html", {
-        "message": message, 
         "task": task, 
         "form": ReviseForm(initial_value)
     })
 
 @login_checker
 def reassign(request, task_id):
-    message = ""
+    comment = ""
     task = Task.objects.get(id = task_id)
 
     if request.method == "POST":
@@ -290,12 +321,13 @@ def reassign(request, task_id):
                 added_worker.tasks.add(task)
             if removed_worker != None:
                 removed_worker.tasks.remove(task)
+            messages.success(request, "勤務者が変更されました")
             return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
 
     assigned_worker = task.workers.all()
     non_assigned_worker = Worker.objects.exclude(tasks=task).all()
     if len(task.workers.all()) >= task.capacity:
-        message = "定員のため、勤務者の追加はできません"
+        comment = "定員のため、勤務者の追加はできません"
         non_assigned_worker = Worker.objects.none()
     
     form = ReassignForm()
@@ -303,14 +335,13 @@ def reassign(request, task_id):
     form.fields["remove"].queryset = assigned_worker
 
     return render(request, "shift/reassign.html", {
-        "message": message,
+        "comment": comment,
         "task": task, 
         "form": form
     })
 
 @login_checker
 def register(request):
-    message = ""
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -319,21 +350,19 @@ def register(request):
             input_is_admin = form.cleaned_data["is_admin"]
 
             if len(Worker.objects.filter(email=input_email)) > 0:
-                message = "そのユーザは既に登録されています"
+                messages.error(request, "そのユーザは既に登録されています")
             else:
                 worker = Worker(name=input_name, email=input_email, password=make_password("0000"), is_admin=input_is_admin)
                 worker.save()
+                messages.success(request, "従業員が登録されました")
                 return HttpResponseRedirect(reverse("shift:register"))
             
     return render(request, "shift/register.html", {
-        "form": RegisterForm(), 
-        "message": message
+        "form": RegisterForm()
     })
 
 @login_checker
 def delete(request):
-    message = ""
-
     if request.method == "POST":
         form = DeleteForm(request.POST)
         if form.is_valid():
@@ -342,16 +371,16 @@ def delete(request):
             future_task = assigned_task.filter(date__gt=now)
 
             if len(future_task) > 0:
-                message = "勤務予定の業務があるので削除できませんでした"
+                messages.error(request, "勤務予定の業務があるので削除できませんでした")
             else:
                 delete_worker.delete()
+                messages.success(request, "従業員が削除されました")
                 return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
     
     form = DeleteForm()
     form.fields["delete"].queryset = Worker.objects.exclude(id=request.session["worker_id"]).all()
 
     return render(request, "shift/delete.html", {
-        "message": message, 
         "form": form
     })
 
@@ -367,6 +396,7 @@ def feedback(request):
             input_text = form.cleaned_data["text"]
             feedback = Feedback(text=input_text, response="", date=now)
             feedback.save()
+            messages.success(request, "フィードバックが送信されました")
             return HttpResponseRedirect(reverse("shift:feedback"))
     
     feedbacks = Feedback.objects.all()
@@ -378,4 +408,5 @@ def feedback(request):
 @login_checker
 def logout(request):
     del request.session["worker_id"]
+    messages.success(request, "ログアウトが完了しました")
     return HttpResponseRedirect(reverse("shift:login"))

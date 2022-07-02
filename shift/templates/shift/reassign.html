@@ -2,8 +2,8 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-    <h1 class="theme">勤務予定者変更画面</h1>
-    <p class="message">{{ message }}</p>
+    <h1 class="theme">出勤者変更画面</h1>
+    <p class="comment">{{ comment }}</p>
 
     <div class="form-wrapper">
         <form action="{% url 'shift:reassign' task.id %}" method="post" class="need-check">
