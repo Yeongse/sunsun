@@ -20,5 +20,5 @@ settings.configure(
 
 numbers = ["0000", "1111", "2222"]
 
-# for number in numbers:
-#     print(f"{number}:", make_password(number))
+for number in numbers:
+    print(f"{number}:", make_password(number))

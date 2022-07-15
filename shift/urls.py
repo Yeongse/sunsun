@@ -5,6 +5,7 @@ from . import views
 app_name = "shift"
 
 urlpatterns = [
+    path("", views.index, name="index"), 
     path("login", views.login, name="login"), 
     path("initialize", views.initialize, name="initialize"), 
     path("home/<int:year>/<int:month>", views.home, name="home"), 
@@ -19,5 +20,7 @@ urlpatterns = [
     path("delete", views.delete, name="delete"), 
     path("instruction", views.instruction, name="instruction"),  
     path("feedback", views.feedback, name="feedback"), 
-    path("logout", views.logout, name="logout")
+    path("logout", views.logout, name="logout"), 
+    path("remind", views.remind, name="remind"), 
+    path("urge", views.urge, name="urge")
 ]

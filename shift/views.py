@@ -1,3 +1,4 @@
+from asyncio import tasks
 from datetime import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -5,6 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail, EmailMessage
 from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.conf import settings
 from django.contrib import messages
 
@@ -86,6 +88,10 @@ def initialize(request):
     })
 
 @login_checker
+def index(request):
+    return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
+    
+@login_checker
 def home(request, year, month):
     from . import mixins
     worker = Worker.objects.get(id=request.session["worker_id"])
@@ -122,15 +128,16 @@ def specification(request, task_id):
     if request.method == "POST":
         worker.tasks.add(task)
 
-        # mail_subject = "申し込み完了の通知"
-        # mail_context = {
-        #     "task": task, 
-        #     "worker": worker
-        # }
-        # mail_message = render_to_string("shift/mails/apply_notice.html", mail_context, request)
-        # mail_from_email = settings.DEFAULT_FROM_EMAIL
-        # mail_recipient_list = [worker.email]
-        # send_mail(subject=mail_subject, message=mail_message, from_email=mail_from_email, recipient_list=mail_recipient_list)
+        mail_subject = "申し込み完了の通知"
+        mail_context = {
+            "task": task, 
+            "worker": worker
+        }
+        mail_message_html = render_to_string("shift/mails/apply_notice.html", mail_context, request)
+        mail_message = strip_tags(mail_message_html)
+        mail_from_email = settings.DEFAULT_FROM_EMAIL
+        mail_recipient_list = [worker.email]
+        send_mail(subject=mail_subject, message=mail_message, from_email=mail_from_email, recipient_list=mail_recipient_list)
 
         messages.success(request, "業務への応募が完了しました")
         return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
@@ -213,21 +220,22 @@ def make(request, past_task_id):
                 )
             task.save()
 
-            # non_admin_workers = Worker.objects.exclude(is_admin=False).all()
-            # mail_subject = "募集開始の通知"
-            # mail_context = {
-            #     "task": task
-            # }
-            # mail_message = render_to_string("shift/mails/make_notice.html", mail_context, request)
-            # mail_bcc_list = [worker.email for worker in non_admin_workers]
-            # mail = EmailMessage(
-            #     subject=mail_subject, 
-            #     body=mail_message, 
-            #     from_email = settings.DEFAULT_FROM_EMAIL, 
-            #     to=settings.DEFAULT_FROM_EMAIL, 
-            #     bcc=mail_bcc_list
-            #     )
-            # mail.send()
+            non_admin_workers = Worker.objects.exclude(is_admin=True).all()
+            mail_subject = "募集開始の通知"
+            mail_context = {
+                "task": task
+            }
+            mail_message_html = render_to_string("shift/mails/made_notice.html", mail_context, request)
+            mail_message = strip_tags(mail_message_html)
+            mail_bcc_list = [worker.email for worker in non_admin_workers]
+            mail = EmailMessage(
+                subject=mail_subject, 
+                body=mail_message, 
+                from_email = settings.DEFAULT_FROM_EMAIL, 
+                to=[settings.DEFAULT_FROM_EMAIL], 
+                bcc=mail_bcc_list
+                )
+            mail.send()
 
             messages.success(request, "業務が作成されました")
             return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
@@ -309,7 +317,7 @@ def revise(request, task_id):
 @login_checker
 def reassign(request, task_id):
     comment = ""
-    task = Task.objects.get(id = task_id)
+    task = Task.objects.get(id=task_id)
 
     if request.method == "POST":
         form = ReassignForm(request.POST)
@@ -410,3 +418,44 @@ def logout(request):
     del request.session["worker_id"]
     messages.success(request, "ログアウトが完了しました")
     return HttpResponseRedirect(reverse("shift:login"))
+
+def remind(request):
+    tomorrow = now+datetime.timedelta(days=1)
+    tasks = Task.objects.filter(date=tomorrow)
+    for task in tasks:
+        workers = task.workers.all()
+        for worker in workers:
+            mail_subject = "出勤前日のリマインド"
+            mail_context = {
+                "task": task, 
+                "worker": worker
+            }
+            mail_message_html = render_to_string("shift/mails/remind_notice.html", mail_context, request)
+            mail_message = strip_tags(mail_message_html)
+            mail_from_email = settings.DEFAULT_FROM_EMAIL
+            mail_recipient_list = [worker.email]
+            send_mail(subject=mail_subject, message=mail_message, from_email=mail_from_email, recipient_list=mail_recipient_list)
+    return HttpResponse("reminder mail sended")
+
+def urge(request):
+    two_days_after_tomorrow = now+datetime.timedelta(days=3)
+    tasks = Task.objects.filter(date=two_days_after_tomorrow)
+    for task in tasks:
+        if len(task.workers.all()) < task.capacity:
+            non_admin_workers = Worker.objects.exclude(is_admin=True).all()
+            mail_subject = "人員不足の業務に関する催促"
+            mail_context = {
+                "task": task
+            }
+            mail_message_html = render_to_string("shift/mails/urge_notice.html", mail_context, request)
+            mail_message = strip_tags(mail_message_html)
+            mail_bcc_list = [worker.email for worker in non_admin_workers]
+            mail = EmailMessage(
+                subject=mail_subject, 
+                body=mail_message, 
+                from_email = settings.DEFAULT_FROM_EMAIL, 
+                to=[settings.DEFAULT_FROM_EMAIL], 
+                bcc=mail_bcc_list
+                )
+            mail.send()
+    return HttpResponse("reminder mail sended")
