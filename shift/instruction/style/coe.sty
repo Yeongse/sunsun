@@ -1,0 +1,221 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is file `coe.sty' - to be used with jarticle.cls
+% edited by Yukio Horiguchi <horiguchi@prec.kyoto-u.ac.jp>
+% modified by <coe_edit@mech.kyoto-u.ac.jp>
+% 
+% 2004-01-30  ver 0.0
+% 2004-02-18  ver 1.0
+% 2004-03-26  ver 1.1  bug fix(environment itemize & enumerate) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{times}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% マージンの設定
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 上側の余白：25mm
+\topmargin=-.4mm	% = 1in (25.4mm) - 25mm
+%% 左側の余白：25mm
+\oddsidemargin=-0.4mm \evensidemargin=\oddsidemargin
+%% 行送り：14.75pt
+\baselineskip=14.75pt
+%% 本文の行長：全角46文字　×　← MS-Word では余白の設定が優先されるようだ
+%%                                あるいはフォントの違い？
+%\textwidth=46zw
+\textwidth=160mm	% = 210mm - 25mm x 2
+%% 本文の行数：45行
+%\textheight=45\baselineskip \advance \textheight by \topskip
+\setlength{\textheight}{242mm}	% = 297mm - 25mm - 30mm
+%% ヘッダーのトップマージン：25mm
+\headsep=0pt \headheight=0pt
+\def\baselinestretch{0.95}%	
+%\def\baselineskip{12pt}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% タイトルの設定
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 所属情報を保持するパラメータ \@affiliation の定義
+\def\affiliation#1{\gdef\@affiliation{#1}}
+\def\@affiliation{\relax}
+% abstractとkeywordsの追加
+%\newcommand{\eabstract}[1]{\gdef\@eabstract{#1}}
+\def\abstract#1{\gdef\@abstract{#1}}
+\def\keywords#1{\gdef\@keywords{#1}}
+
+%% タイトル出力形式の定義
+\let\maketitle\relax
+\let\@maketitle\relax
+\def\maketitle{%
+  \newpage\null
+  \vskip -5mm
+%  \vspace{-0.5cm}
+  \thispagestyle{empty}
+  %% 題名：MS-Word で 16pt のＭＳ明朝の太字相当＆センタリング
+  {\centering
+    %\fontfamily{mc}\fontseries{bx}\fontshape{n}\fontsize{14.4}{18}\selectfont
+    \LARGE\bfseries
+    \@title \par}%
+  \vskip 2.5em
+  %% 題名：MS-Word で 12pt のＭＳ明朝の太字相当＆左 69.5mm にインデント
+  {\parindent=69.5mm
+    %\fontfamily{mc}\fontseries{m}\fontshape{n}\fontsize{14.4}{18}\selectfont
+    \large
+    \begin{tabular}[t]{p{13zw}l}
+      \@affiliation & \@author
+    \end{tabular}\par}%
+    \vskip 1.em
+  {\parindent=2.5mm%\centering
+    \small
+    \begin{tabular}{p{150mm}} 
+      \baselineskip 1.25em 
+      {\bf Abstract:\hskip 0.25em}\@abstract\par
+      {\bf Key words:\hskip 0.25em}\@keywords
+      \baselineskip 1.25em 
+    \end{tabular} }
+   \vskip 1.5em}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ノンブルと柱の設定
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ノンブルも柱も表示しない
+\pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 見出し関係
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 見出し番号表記の設定
+%%%% section → 「1. XXXX」の形式
+\renewcommand{\thesection}{\@arabic\c@section.}
+%%%% subsection → 「1.1 YYYY」の形式
+\renewcommand{\thesubsection}{\thesection\@arabic\c@subsection}
+%%%% subsubsection → 「1.1.1 ZZZZ」の形式
+\renewcommand{\thesubsubsection}{%
+   \thesubsection.\@arabic\c@subsubsection}
+
+%% 見出し前後の空白・インデントの設定
+% -----------------------------------------------------------------------------
+% @startsection コマンド
+% 第1引数：カウンタ名（section や subsection など）
+% 第2引数：レベル（深さ）
+% 第3引数：見出し前に付加するインデント量
+% 第4引数：絶対値が見出し前に付けられる空白量
+%          負の場合，見出しに続くテキストのインデントを抑制
+% 第5引数：見出し後に付けられる垂直方向の空白量
+%          負値の場合，見出し後に改行されず絶対値分だけ水平方向の空白を挿入
+% 第6引数：見出しのスタイル
+% -----------------------------------------------------------------------------
+%%%%
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+   {0.75ex \@plus .2ex \@minus .2ex}%4
+   {0.75ex \@plus .2ex}%5
+%   {.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%4
+%   {.5\Cvs \@plus.3\Cdp}%5
+   {\reset@font\large\bfseries}}%6
+%%%%
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+   {0.5ex \@plus 0.2ex \@minus .2ex}%4
+   {-1em}%5
+%   {.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%4
+%   {-.5\Cvs \@plus-.3\Cdp}%5
+   {\reset@font\normalsize\bfseries}}%6
+%%%%
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
+   {0.5ex \@plus 0.2ex \@minus .2ex}%4
+   {-1em}%5
+%   {.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%4
+%   {-.5\Cvs \@plus-.3\Cdp}%5
+   {\reset@font\normalsize\bfseries}}%6
+%
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 参考文献関係
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 文献番号の体裁 
+\def\@biblabel#1{[#1]}
+
+\def\thebibliography#1{\section*{\refname\@mkboth{\refname}{\refname}}%
+\list{\@biblabel{\@arabic\c@enumiv}}%
+        {\settowidth\labelwidth{\@biblabel{#1}}%
+         \leftmargin\labelwidth
+         \advance\leftmargin\labelsep
+	 \itemsep 0pt plus .5pt\relax% 追加しました．項目間調整
+         \@openbib@code
+         \usecounter{enumiv}%
+         \let\p@enumiv\@empty
+         \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+   \sloppy
+   \clubpenalty4000
+   \@clubpenalty\clubpenalty
+   \widowpenalty4000%
+   \sfcode`\.\@m}
+  {\def\@noitemerr
+    {\@latex@warning{Empty `thebibliography' environment}}%
+   \endlist}
+\let\@openbib@code\@empty
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 箇条書き環境の修正 行間が広すぎる
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+\makeatletter
+\renewenvironment{enumerate}
+  {\ifnum \@enumdepth >\thr@@\@toodeep\else
+   \advance\@enumdepth\@ne
+   \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \leftmargin1.5zw   % 2004-03-26 add
+   \list{\csname label\@enumctr\endcsname}{%
+      \iftdir
+         \ifnum \@listdepth=\@ne \topsep.5\normalbaselineskip
+           \else\topsep\z@\fi
+         %\parskip\z@ \itemsep\z@ \parsep\z@ %移動前
+         \labelwidth1zw \labelsep.3zw
+         \ifnum \@enumdepth=\@ne \leftmargin1zw\relax
+           \else\leftmargin\leftskip\fi
+         \advance\leftmargin 1zw
+      \fi
+         \parskip\z@ \itemsep\z@ \parsep\z@ %移動後
+         \usecounter{\@enumctr}%
+         \def\makelabel##1{\hss\llap{##1}}}%
+   \fi}{\endlist}
+
+\renewenvironment{itemize}
+  {\ifnum \@itemdepth >\thr@@\@toodeep\else
+   \advance\@itemdepth\@ne
+   \edef\@itemitem{labelitem\romannumeral\the\@itemdepth}%
+   \expandafter
+   \leftmargin1.5zw % 2004-03-26 add
+   \list{\csname \@itemitem\endcsname}{%
+      \iftdir
+         \ifnum \@listdepth=\@ne \topsep.5\normalbaselineskip
+           \else\topsep\z@\fi
+         %\parskip\z@ \itemsep\z@ \parsep\z@ %移動前
+         \labelwidth1zw \labelsep.3zw
+         \ifnum \@itemdepth =\@ne \leftmargin1zw\relax
+           \else\leftmargin\leftskip\fi
+         \advance\leftmargin 1zw
+      \fi
+         \parskip\z@ \itemsep\z@ \parsep\z@ %移動後
+         \def\makelabel##1{\hss\llap{##1}}}%
+   \fi}{\endlist}
+
+\renewenvironment{description}%% description 環境を再定義
+  {\list{}{\labelwidth\z@ \itemindent-\leftmargin
+   \iftdir
+     \leftmargin\leftskip \advance\leftmargin3\Cwd
+     \rightmargin\rightskip
+     \labelsep=1zw% 元々ここにあった定義を...
+   \fi
+     \itemsep\z@% こちらに移動
+     \listparindent\z@ \topskip\z@ \parskip\z@ \partopsep\z@% こちらに移動
+           \let\makelabel\descriptionlabel}}{\endlist}
+
+\makeatother
+
+\endinput
+
+
+% end of coe.sty

@@ -1,0 +1,14 @@
+# Fdb version 3
+["dvipdf"] 0 "style.dvi" "style.pdf" "style" 0
+  "style.dvi" 0 -1 0 "latex"
+  (generated)
+  "style.pdf"
+["latex"] 1638423552 "style.tex" "style.dvi" "style" 1638423552
+  "/usr/local/texlive/2021/texmf-dist/web2c/texmf.cnf" 1621028613 40042 fe981136cbb5f3715ab1b0e46e3d3892 ""
+  "/usr/local/texlive/2021/texmf-var/web2c/eptex/platex.fmt" 1633524142 2754453 c2d85e3df0eeb5a2095e4c43ee1b9e94 ""
+  "/usr/local/texlive/2021/texmf.cnf" 1616695596 577 4c1911a7228e554c6032256d3cf5567d ""
+  "style.aux" 1638423474 32 3985256e7290058c681f74d7a3565a19 ""
+  "style.tex" 1638423552 333 6f186b7aeb9bd66a0973ddcfd8c97584 ""
+  (generated)
+  "style.dvi"
+  "style.log"

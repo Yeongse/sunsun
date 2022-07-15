@@ -1,0 +1,216 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is file `coe.sty' - to be used with jarticle.cls
+% edited by Yukio Horiguchi <horiguchi@prec.kyoto-u.ac.jp>
+% modified by <coe_edit@mech.kyoto-u.ac.jp>
+%
+% 2004-01-30  ver 0.0
+% 2004-02-18  ver 1.0
+% 2004-03-26  ver 1.1  bug fix(environment itemize & enumerate)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{times}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% �}�[�W���̐ݒ�
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% �㑤�̗]���F25mm
+\topmargin=-.4mm	% = 1in (25.4mm) - 25mm
+%% �����̗]���F25mm
+\oddsidemargin=-0.4mm \evensidemargin=\oddsidemargin
+%% �s����F14.75pt
+\baselineskip=14.75pt
+%% �{���̍s���F�S�p46�����@�~�@�� MS-Word �ł͗]���̐ݒ肪�D�悳���悤��
+%%                                ���邢�̓t�H���g�̈Ⴂ�H
+%\textwidth=46zw
+\textwidth=160mm	% = 210mm - 25mm x 2
+%% �{���̍s���F45�s
+%\textheight=45\baselineskip \advance \textheight by \topskip
+\setlength{\textheight}{242mm}	% = 297mm - 25mm - 30mm
+%% �w�b�_�[�̃g�b�v�}�[�W���F25mm
+\headsep=0pt \headheight=0pt
+\def\baselinestretch{0.95}%
+%\def\baselineskip{12pt}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% �^�C�g���̐ݒ�
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ��������ێ�����p�����[�^ \@affiliation �̒�`
+\def\affiliation#1{\gdef\@affiliation{#1}}
+\def\@affiliation{\relax}
+% abstract��keywords�̒ǉ�
+%\newcommand{\eabstract}[1]{\gdef\@eabstract{#1}}
+\def\abstract#1{\gdef\@abstract{#1}}
+\def\keywords#1{\gdef\@keywords{#1}}
+
+%% �^�C�g���o�͌`���̒�`
+\let\maketitle\relax
+\let\@maketitle\relax
+\def\maketitle{%
+  \newpage\null
+  \vskip -5mm
+%  \vspace{-0.5cm}
+%    \thispagestyle{empty}
+  %% �薼�FMS-Word �� 16pt �̂l�r�����̑����������Z���^�����O
+  {\centering
+    %\fontfamily{mc}\fontseries{bx}\fontshape{n}\fontsize{14.4}{18}\selectfont
+    \LARGE\bfseries
+    \@title \par}%
+  \vskip 2.5em
+  %% �薼�FMS-Word �� 12pt �̂l�r�����̑����������� 69.5mm �ɃC���f���g
+  {\parindent=69.5mm
+    %\fontfamily{mc}\fontseries{m}\fontshape{n}\fontsize{14.4}{18}\selectfont
+    \large
+    \begin{tabular}[t]{p{13zw}l}
+      \@affiliation & \@author
+    \end{tabular}\par}%
+    \vskip 1.em
+  {\parindent=2.5mm%\centering
+    \small
+   \vskip 1.5em}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% �m���u���ƒ��̐ݒ�
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% �m���u���������\�����Ȃ�
+% \pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ���o���֌W
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ���o���ԍ��\�L�̐ݒ�
+%%%% section �� �u1. XXXX�v�̌`��
+\renewcommand{\thesection}{\@arabic\c@section.}
+%%%% subsection �� �u1.1 YYYY�v�̌`��
+\renewcommand{\thesubsection}{\thesection\@arabic\c@subsection}
+%%%% subsubsection �� �u1.1.1 ZZZZ�v�̌`��
+\renewcommand{\thesubsubsection}{%
+   \thesubsection.\@arabic\c@subsubsection}
+
+%% ���o���O��̋󔒁E�C���f���g�̐ݒ�
+% -----------------------------------------------------------------------------
+% @startsection �R�}���h
+% ��1�����F�J�E���^���isection �� subsection �Ȃǁj
+% ��2�����F���x���i�[���j
+% ��3�����F���o���O�ɕt������C���f���g��
+% ��4�����F��Βl�����o���O�ɕt������󔒗�
+%          ���̏ꍇ�C���o���ɑ����e�L�X�g�̃C���f���g��}��
+% ��5�����F���o����ɕt�����鐂�������̋󔒗�
+%          ���l�̏ꍇ�C���o����ɉ��s���ꂸ��Βl���������������̋󔒂�}��
+% ��6�����F���o���̃X�^�C��
+% -----------------------------------------------------------------------------
+%%%%
+\renewcommand{\section}{\@startsection{section}{1}{\z@}%
+   {2ex \@plus .2ex \@minus .2ex}%4
+   {0.75ex \@plus .2ex}%5
+%   {.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%4
+%   {.5\Cvs \@plus.3\Cdp}%5
+   {\reset@font\large\bfseries}}%6
+%%%%
+\renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+   {2ex \@plus 0.2ex \@minus .2ex}%4
+%    {-1em}%5
+%   {.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%4
+   {+.2\Cvs \@plus-.3\Cdp}%5
+   {\reset@font\normalsize\bfseries}}%6
+%%%%
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
+   {1ex \@plus 0.2ex \@minus .2ex}%4
+%    {-1em}%5
+%   {.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%4
+   {+.5\Cvs \@plus-.3\Cdp}%5
+   {\reset@font\normalsize\bfseries}}%6
+%
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% �Q�l�����֌W
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% �����ԍ��̑̍�
+\def\@biblabel#1{[#1]}
+
+\def\thebibliography#1{\section*{\refname\@mkboth{\refname}{\refname}}%
+\list{\@biblabel{\@arabic\c@enumiv}}%
+        {\settowidth\labelwidth{\@biblabel{#1}}%
+         \leftmargin\labelwidth
+         \advance\leftmargin\labelsep
+	 \itemsep 0pt plus .5pt\relax% �ǉ����܂����D���ڊԒ���
+         \@openbib@code
+         \usecounter{enumiv}%
+         \let\p@enumiv\@empty
+         \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+   \sloppy
+   \clubpenalty4000
+   \@clubpenalty\clubpenalty
+   \widowpenalty4000%
+   \sfcode`\.\@m}
+  {\def\@noitemerr
+    {\@latex@warning{Empty `thebibliography' environment}}%
+   \endlist}
+\let\@openbib@code\@empty
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% �ӏ��������̏C�� �s�Ԃ��L������
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+\makeatletter
+\renewenvironment{enumerate}
+  {\ifnum \@enumdepth >\thr@@\@toodeep\else
+   \advance\@enumdepth\@ne
+   \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+   \leftmargin1.5zw   % 2004-03-26 add
+   \list{\csname label\@enumctr\endcsname}{%
+      \iftdir
+         \ifnum \@listdepth=\@ne \topsep.5\normalbaselineskip
+           \else\topsep\z@\fi
+         %\parskip\z@ \itemsep\z@ \parsep\z@ %�ړ��O
+         \labelwidth1zw \labelsep.3zw
+         \ifnum \@enumdepth=\@ne \leftmargin1zw\relax
+           \else\leftmargin\leftskip\fi
+         \advance\leftmargin 1zw
+      \fi
+         \parskip\z@ \itemsep\z@ \parsep\z@ %�ړ���
+         \usecounter{\@enumctr}%
+         \def\makelabel##1{\hss\llap{##1}}}%
+   \fi}{\endlist}
+
+\renewenvironment{itemize}
+  {\ifnum \@itemdepth >\thr@@\@toodeep\else
+   \advance\@itemdepth\@ne
+   \edef\@itemitem{labelitem\romannumeral\the\@itemdepth}%
+   \expandafter
+   \leftmargin1.5zw % 2004-03-26 add
+   \list{\csname \@itemitem\endcsname}{%
+      \iftdir
+         \ifnum \@listdepth=\@ne \topsep.5\normalbaselineskip
+           \else\topsep\z@\fi
+         %\parskip\z@ \itemsep\z@ \parsep\z@ %�ړ��O
+         \labelwidth1zw \labelsep.3zw
+         \ifnum \@itemdepth =\@ne \leftmargin1zw\relax
+           \else\leftmargin\leftskip\fi
+         \advance\leftmargin 1zw
+      \fi
+         \parskip\z@ \itemsep\z@ \parsep\z@ %�ړ���
+         \def\makelabel##1{\hss\llap{##1}}}%
+   \fi}{\endlist}
+
+\renewenvironment{description}%% description �����Ē�`
+  {\list{}{\labelwidth\z@ \itemindent-\leftmargin
+   \iftdir
+     \leftmargin\leftskip \advance\leftmargin3\Cwd
+     \rightmargin\rightskip
+     \labelsep=1zw% ���X�����ɂ�������`��...
+   \fi
+     \itemsep\z@% ������Ɉړ�
+     \listparindent\z@ \topskip\z@ \parskip\z@ \partopsep\z@% ������Ɉړ�
+           \let\makelabel\descriptionlabel}}{\endlist}
+
+\makeatother
+
+\endinput
+
+
+% end of coe.sty

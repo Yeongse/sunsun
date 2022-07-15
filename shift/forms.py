@@ -35,7 +35,7 @@ class ReviseForm(forms.Form):
     specification = forms.CharField(label="詳細内容", widget=forms.Textarea())
     type = forms.ChoiceField(label="業務種別", choices=(("CL外業務", "CL外業務"), ("CL業務", "CL業務"), ("その他", "その他")))
     capacity = forms.IntegerField(label="募集人数")
-    extra = forms.CharField(label="特筆事項", widget=forms.Textarea())
+    extra = forms.CharField(label="特筆事項", widget=forms.Textarea(), required=False)
 
 # デフォルトのクエリセットにはフォームから送信された値が存在するようにしておく. 
 class ReassignForm(forms.Form):
