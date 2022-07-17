@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Q
 
 from .models import Task, Worker, Feedback
 from .forms import LoginForm, InitializeForm, FeedbackForm, PersonalForm, RegisterForm, DeleteForm, ReviseForm, ReassignForm, MakeForm, RecallForm
@@ -333,7 +334,7 @@ def reassign(request, task_id):
             return HttpResponseRedirect(reverse("shift:home", args=[now.year, now.month]))
 
     assigned_worker = task.workers.all()
-    non_assigned_worker = Worker.objects.exclude(tasks=task).all()
+    non_assigned_worker = Worker.objects.exclude(Q(tasks=task)|Q(is_admin=True)).all()
     if len(task.workers.all()) >= task.capacity:
         comment = "定員のため、勤務者の追加はできません"
         non_assigned_worker = Worker.objects.none()

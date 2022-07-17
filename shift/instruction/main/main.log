@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2021.10.6)  8 MAR 2022 14:26
+This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2021.10.6)  18 JUL 2022 03:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -220,54 +220,90 @@ LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <14.4> not available
 (Font)              Font shape `JT1/gt/m/n' tried instead on input line 20.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <14.4> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 20.
-File: ../figure/fileName.jpg Graphic file (type bmp)
-<../figure/fileName.jpg>
 LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JT1/gt/m/n' tried instead on input line 36.
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 21.
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
-(Font)              Font shape `JY1/gt/m/n' tried instead on input line 36.
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 21.
+File: ../figure/1_login.png Graphic file (type bmp)
+<../figure/1_login.png>
  [1
 
 ]
-./main.tex:58: Missing $ inserted.
-<inserted text> 
-                $
-l.58 ^^Iおまけ(\alpha
-                     , \beta, \gamma, \Gamma)
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+File: ../figure/9_personal.png Graphic file (type bmp)
+<../figure/9_personal.png>
+File: ../figure/10_feedback.png Graphic file (type bmp)
+<../figure/10_feedback.png>
+File: ../figure/2_home_admin.png Graphic file (type bmp)
+<../figure/2_home_admin.png>
+ [2
 
-./main.tex:59: Missing $ inserted.
-<inserted text> 
-                $
-l.59 
-     
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+] [3]
+File: ../figure/3_specification_admin.png Graphic file (type bmp)
+<../figure/3_specification_admin.png>
+ [4
 
+]
+File: ../figure/4_revise_1.png Graphic file (type bmp)
+<../figure/4_revise_1.png>
+File: ../figure/4_revise_2.png Graphic file (type bmp)
+<../figure/4_revise_2.png>
+ [5
 
-./main.tex:61: LaTeX Error: There's no line here to end.
+]
+File: ../figure/5_reassign.png Graphic file (type bmp)
+<../figure/5_reassign.png>
+File: ../figure/6_make_1.png Graphic file (type bmp)
+<../figure/6_make_1.png>
+ [6
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.61 
-     
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
+]
+File: ../figure/6_make_2.png Graphic file (type bmp)
+<../figure/6_make_2.png>
+File: ../figure/6_make_3.png Graphic file (type bmp)
+<../figure/6_make_3.png>
+ [7
 
-[2] [3
+]
+File: ../figure/7_register.png Graphic file (type bmp)
+<../figure/7_register.png>
+File: ../figure/8_delete.png Graphic file (type bmp)
+<../figure/8_delete.png>
+ [8
 
-] (./main.aux) ) 
+]
+File: ../figure/11_home_non.png Graphic file (type bmp)
+<../figure/11_home_non.png>
+File: ../figure/12_confirm.png Graphic file (type bmp)
+<../figure/12_confirm.png>
+ [9
+
+]
+File: ../figure/13_specification_non_1.png Graphic file (type bmp)
+<../figure/13_specification_non_1.png>
+File: ../figure/13_specification_non_2.png Graphic file (type bmp)
+<../figure/13_specification_non_2.png>
+ [10
+
+]
+File: ../figure/14_mail_1.png Graphic file (type bmp)
+<../figure/14_mail_1.png>
+File: ../figure/14_mail_2.png Graphic file (type bmp)
+<../figure/14_mail_2.png>
+File: ../figure/14_mail_2.png Graphic file (type bmp)
+<../figure/14_mail_2.png>
+ [11
+
+]
+File: ../figure/14_mail_2.png Graphic file (type bmp)
+<../figure/14_mail_2.png>
+ [12] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 3946 strings out of 479062
- 60976 string characters out of 5866374
- 361716 words of memory out of 5000000
- 22011 multiletter control sequences out of 15000+600000
- 421648 words of font info for 97 fonts, out of 8000000 for 9000
+ 4019 strings out of 479062
+ 63283 string characters out of 5866374
+ 361728 words of memory out of 5000000
+ 22068 multiletter control sequences out of 15000+600000
+ 418864 words of font info for 87 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
- 62i,6n,69p,261b,408s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,9n,69p,261b,382s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on main.dvi (3 pages, 2384 bytes).
+Output written on main.dvi (12 pages, 15784 bytes).

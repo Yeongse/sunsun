@@ -1,4 +1,4 @@
-PWD /Users/yogns/Desktop/修士研究/TexBaseDefault/main
+PWD /Users/yogns/Desktop/instruction/main
 INPUT /usr/local/texlive/2021/texmf.cnf
 INPUT /usr/local/texlive/2021/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2021/texmf.cnf
@@ -358,19 +358,87 @@ INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/ptex-fonts/standard/tgoth10.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/ptex-fonts/standard/goth10.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT ../figure/fileName.jpg
-INPUT ../figure/fileName.jpg
-INPUT ../figure/fileName.jpg
-INPUT extractbb -B cropbox -O ../figure/fileName.jpg
+INPUT ../figure/1_login.png
+INPUT ../figure/1_login.png
+INPUT ../figure/1_login.png
+INPUT extractbb -B cropbox -O ../figure/1_login.png
 OUTPUT main.dvi
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/jknappen/ec/tcrm1095.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmmib10.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbsy10.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/ptex-fonts/standard/goth10.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
+INPUT ../figure/9_personal.png
+INPUT ../figure/9_personal.png
+INPUT ../figure/9_personal.png
+INPUT extractbb -B cropbox -O ../figure/9_personal.png
+INPUT ../figure/10_feedback.png
+INPUT ../figure/10_feedback.png
+INPUT ../figure/10_feedback.png
+INPUT extractbb -B cropbox -O ../figure/10_feedback.png
+INPUT ../figure/2_home_admin.png
+INPUT ../figure/2_home_admin.png
+INPUT ../figure/2_home_admin.png
+INPUT extractbb -B cropbox -O ../figure/2_home_admin.png
+INPUT ../figure/3_specification_admin.png
+INPUT ../figure/3_specification_admin.png
+INPUT ../figure/3_specification_admin.png
+INPUT extractbb -B cropbox -O ../figure/3_specification_admin.png
+INPUT ../figure/4_revise_1.png
+INPUT ../figure/4_revise_1.png
+INPUT ../figure/4_revise_1.png
+INPUT extractbb -B cropbox -O ../figure/4_revise_1.png
+INPUT ../figure/4_revise_2.png
+INPUT ../figure/4_revise_2.png
+INPUT ../figure/4_revise_2.png
+INPUT extractbb -B cropbox -O ../figure/4_revise_2.png
+INPUT ../figure/5_reassign.png
+INPUT ../figure/5_reassign.png
+INPUT ../figure/5_reassign.png
+INPUT extractbb -B cropbox -O ../figure/5_reassign.png
+INPUT ../figure/6_make_1.png
+INPUT ../figure/6_make_1.png
+INPUT ../figure/6_make_1.png
+INPUT extractbb -B cropbox -O ../figure/6_make_1.png
+INPUT ../figure/6_make_2.png
+INPUT ../figure/6_make_2.png
+INPUT ../figure/6_make_2.png
+INPUT extractbb -B cropbox -O ../figure/6_make_2.png
+INPUT ../figure/6_make_3.png
+INPUT ../figure/6_make_3.png
+INPUT ../figure/6_make_3.png
+INPUT extractbb -B cropbox -O ../figure/6_make_3.png
+INPUT ../figure/7_register.png
+INPUT ../figure/7_register.png
+INPUT ../figure/7_register.png
+INPUT extractbb -B cropbox -O ../figure/7_register.png
+INPUT ../figure/8_delete.png
+INPUT ../figure/8_delete.png
+INPUT ../figure/8_delete.png
+INPUT extractbb -B cropbox -O ../figure/8_delete.png
+INPUT ../figure/11_home_non.png
+INPUT ../figure/11_home_non.png
+INPUT ../figure/11_home_non.png
+INPUT extractbb -B cropbox -O ../figure/11_home_non.png
+INPUT ../figure/12_confirm.png
+INPUT ../figure/12_confirm.png
+INPUT ../figure/12_confirm.png
+INPUT extractbb -B cropbox -O ../figure/12_confirm.png
+INPUT ../figure/13_specification_non_1.png
+INPUT ../figure/13_specification_non_1.png
+INPUT ../figure/13_specification_non_1.png
+INPUT extractbb -B cropbox -O ../figure/13_specification_non_1.png
+INPUT ../figure/13_specification_non_2.png
+INPUT ../figure/13_specification_non_2.png
+INPUT ../figure/13_specification_non_2.png
+INPUT extractbb -B cropbox -O ../figure/13_specification_non_2.png
+INPUT ../figure/14_mail_1.png
+INPUT ../figure/14_mail_1.png
+INPUT ../figure/14_mail_1.png
+INPUT extractbb -B cropbox -O ../figure/14_mail_1.png
+INPUT ../figure/14_mail_2.png
+INPUT ../figure/14_mail_2.png
+INPUT ../figure/14_mail_2.png
+INPUT extractbb -B cropbox -O ../figure/14_mail_2.png
+INPUT ../figure/14_mail_2.png
+INPUT ../figure/14_mail_2.png
+INPUT ../figure/14_mail_2.png
+INPUT ../figure/14_mail_2.png
+INPUT ../figure/14_mail_2.png
+INPUT ../figure/14_mail_2.png
 INPUT main.aux
